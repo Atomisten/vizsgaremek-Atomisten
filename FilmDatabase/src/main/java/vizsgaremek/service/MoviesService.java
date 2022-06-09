@@ -40,7 +40,7 @@ public class MoviesService {
 
     }
 
-    //    public MoviesInfo findById(Integer id) {
+//        public MoviesInfo findById(Integer id) {
 ////        Movies movieById = foundHandler(id);
 ////        return modelMapper.map(movieById, MoviesInfo.class);
 //        Movies movieById = null;
@@ -60,17 +60,14 @@ public class MoviesService {
 //    }
 
     public MoviesInfo findById(Integer id) {
-//        Movies movieById = foundHandler(id);
-//        return modelMapper.map(movieById, MoviesInfo.class);
 
         try {
             Movies movieById = moviesRepository.findByID(id);
             return modelMapper.map(movieById, MoviesInfo.class);
-        } catch (EmptyResultDataAccessException | NoResultException e) {                                 //InvocationTargetException ?!!
+        } catch (EmptyResultDataAccessException e) {                                 //InvocationTargetException ?!!
             throw new MovieNotFoundException(id);
         }
     }
-
 
 
     public MoviesInfo updateOrInsert(Integer id, MovieCommand command) {
@@ -100,7 +97,7 @@ public class MoviesService {
     public Movies foundHandler(Integer id) {
         try {
             return moviesRepository.findByID(id);
-        } catch (NoResultException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new MovieNotFoundException(id);
         }
     }

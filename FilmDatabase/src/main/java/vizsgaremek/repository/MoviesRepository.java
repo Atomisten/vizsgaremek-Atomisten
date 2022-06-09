@@ -3,13 +3,10 @@ package vizsgaremek.repository;
 import org.springframework.stereotype.Repository;
 import vizsgaremek.domain.Movies;
 import vizsgaremek.dto.archive.DeletedMovies;
-import vizsgaremek.exceptionhandling.MovieNotFoundException;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class MoviesRepository {
@@ -17,12 +14,12 @@ public class MoviesRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public DeletedMovies archive (DeletedMovies deletedMovie) {
+    public DeletedMovies archive(DeletedMovies deletedMovie) {
         entityManager.persist(deletedMovie);
         return deletedMovie;
     }
 
-    public List<DeletedMovies> archiveList(){
+    public List<DeletedMovies> archiveList() {
         return entityManager.createQuery("SELECT d from DeletedMovies d", DeletedMovies.class).getResultList();
     }
 
@@ -37,7 +34,7 @@ public class MoviesRepository {
     }
 
 
-    public Movies updateOrInsert (Movies toUpdate) {
+    public Movies updateOrInsert(Movies toUpdate) {
         return entityManager.merge(toUpdate);
     }
 
@@ -47,7 +44,7 @@ public class MoviesRepository {
                 .getSingleResult();
     }
 
-    public void delete (Movies movieToDelete) {
+    public void delete(Movies movieToDelete) {
         entityManager.remove(movieToDelete);
     }
 

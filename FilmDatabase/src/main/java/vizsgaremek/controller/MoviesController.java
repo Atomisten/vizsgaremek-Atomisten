@@ -39,13 +39,13 @@ public class MoviesController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public MoviesInfo updateOrInsert (@PathVariable("id") Integer id, @RequestBody MovieCommand command) {
+    public MoviesInfo updateOrInsert(@PathVariable("id") Integer id, @RequestBody MovieCommand command) {
         return moviesService.updateOrInsert(id, command);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void delete (@PathVariable("id") Integer id) {
+    public void delete(@PathVariable("id") Integer id) {
         moviesService.deleteById(id);
     }
 
@@ -58,7 +58,7 @@ public class MoviesController {
     @GetMapping("/archive")
     @ResponseStatus(HttpStatus.OK)
     public List<DeletedMovies> archiveList() {
-       return moviesService.archiveList();
+        return moviesService.archiveList();
     }
 
 }
