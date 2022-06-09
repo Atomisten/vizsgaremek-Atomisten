@@ -3,10 +3,13 @@ package vizsgaremek.repository;
 import org.springframework.stereotype.Repository;
 import vizsgaremek.domain.Movies;
 import vizsgaremek.dto.archive.DeletedMovies;
+import vizsgaremek.exceptionhandling.MovieNotFoundException;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MoviesRepository {
@@ -34,9 +37,9 @@ public class MoviesRepository {
     }
 
     public Movies findByID(Integer id) {
-        return entityManager.createQuery("SELECT m FROM Movies m WHERE m.id = :value", Movies.class)
-                .setParameter("value", id)
-                .getSingleResult();
+            return entityManager.createQuery("SELECT m FROM Movies m WHERE m.id = :value", Movies.class)
+                    .setParameter("value", id)
+                    .getSingleResult();
     }
 
     public Movies updateOrInsert (Movies toUpdate) {
