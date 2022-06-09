@@ -36,17 +36,28 @@ public class MoviesRepository {
         return entityManager.createQuery("SELECT m FROM Movies m", Movies.class).getResultList();
     }
 
-    public Movies findByID(Integer id) {
-            return entityManager.createQuery("SELECT m FROM Movies m WHERE m.id = :value", Movies.class)
-                    .setParameter("value", id)
-                    .getSingleResult();
-    }
 
     public Movies updateOrInsert (Movies toUpdate) {
         return entityManager.merge(toUpdate);
     }
 
+    public Movies findByID(Integer id) {
+        return entityManager.createQuery("SELECT m FROM Movies m WHERE m.id = :value", Movies.class)
+                .setParameter("value", id)
+                .getSingleResult();
+    }
+
     public void delete (Movies movieToDelete) {
         entityManager.remove(movieToDelete);
     }
+
+//    public void delete (Optional<Movies> movieToDelete) {
+//        entityManager.remove(movieToDelete);
+//    }
+//
+//    public Optional<Movies> findByID(Integer id) {
+//        return Optional.of(entityManager.createQuery("SELECT m FROM Movies m WHERE m.id = :value", Movies.class)
+//                .setParameter("value", id)
+//                .getSingleResult());
+//    }
 }
