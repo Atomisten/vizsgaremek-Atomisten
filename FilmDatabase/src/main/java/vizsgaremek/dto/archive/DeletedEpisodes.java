@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
@@ -12,15 +13,17 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "deleted_movies")
-public class DeletedMovies {
+@Table(name = "deleted_episodes")
+public class DeletedEpisodes {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "deletion_id")
     private Integer deleteId;
+
 //    @Column(name = "date_time")
 //    private LocalDateTime localDateTime;                                                        //TODO törlés dátum
+
     @Column(name = "movie_id")
     private Integer id;
 
@@ -34,7 +37,7 @@ public class DeletedMovies {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        DeletedMovies that = (DeletedMovies) o;
+        DeletedEpisodes that = (DeletedEpisodes) o;
         return deleteId != null && Objects.equals(deleteId, that.deleteId);
     }
 

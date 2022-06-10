@@ -10,7 +10,6 @@ import vizsgaremek.dto.commands.MovieCommand;
 import vizsgaremek.exceptionhandling.MovieNotFoundException;
 import vizsgaremek.repository.MoviesRepository;
 
-import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,33 +39,10 @@ public class MoviesService {
 
     }
 
-//        public MoviesInfo findById(Integer id) {
-////        Movies movieById = foundHandler(id);
-////        return modelMapper.map(movieById, MoviesInfo.class);
-//        Movies movieById = null;
-//        try {
-//            movieById = moviesRepository.findByID(id);
-//                                                                                  //InvocationTargetException ?!!
-//        } catch (Exception e) {
-//            System.out.println("Underlying exception: " + e.getCause());
-//            if (EmptyResultDataAccessException.class.equals(e.getCause().getClass()) |
-//                    NoResultException.class.equals(e.getCause().getClass())) {
-//                throw new MovieNotFoundException(id);
-//            }
-//            else e.printStackTrace();
-//        }
-//
-//        return modelMapper.map(movieById, MoviesInfo.class);
-//    }
 
     public MoviesInfo findById(Integer id) {
-
-        try {
-            Movies movieById = moviesRepository.findByID(id);
-            return modelMapper.map(movieById, MoviesInfo.class);
-        } catch (EmptyResultDataAccessException e) {                                 //InvocationTargetException ?!!
-            throw new MovieNotFoundException(id);
-        }
+        Movies movieById = moviesRepository.findByID(id);
+        return modelMapper.map(movieById, MoviesInfo.class);
     }
 
 
@@ -82,7 +58,7 @@ public class MoviesService {
     }
 
     public void deleteById(Integer id) {
-        Movies movieFound = moviesRepository.findByID(id);
+        Movies movieFound = moviesRepositoryExceptionHandler(id);
         archive(id);
         moviesRepository.delete(movieFound);
     }
@@ -94,41 +70,11 @@ public class MoviesService {
     }
 
 
-    public Movies foundHandler(Integer id) {
+    public Movies moviesRepositoryExceptionHandler(Integer id) {
         try {
             return moviesRepository.findByID(id);
         } catch (EmptyResultDataAccessException e) {
             throw new MovieNotFoundException(id);
         }
     }
-
-//    public MoviesInfo findById(Integer id) {
-////        Movies movieById = foundHandler(id);
-//        Optional<Movies> movieById = moviesRepository.findByID(id);
-//        if (movieById.isPresent()) {
-//            return modelMapper.map(movieById.get(), MoviesInfo.class);
-//        } else {
-//            throw new MovieNotFoundException(id);
-//        }
-//    }
-
-//    private DeletedMovies archive(Integer id) {
-//        Optional<Movies> movieFound = moviesRepository.findByID(id);
-//        DeletedMovies movieToArchive = modelMapper.map(movieFound, DeletedMovies.class);
-//        return moviesRepository.archive(movieToArchive);
-//    }
-//
-//    public void deleteById(Integer id) {
-//        Optional<Movies> movieFound = moviesRepository.findByID(id);
-//        archive(id);
-//        moviesRepository.delete(movieFound);
-//    }
-//
-//    public Optional<Movies> foundHandler(Integer id) {
-//        try {
-//            return moviesRepository.findByID(id);
-//        } catch (NoResultException e) {
-//            throw new MovieNotFoundException(id);
-//        }
-//    }
 }

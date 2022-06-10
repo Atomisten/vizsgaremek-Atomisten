@@ -49,11 +49,6 @@ public class MoviesController {
         moviesService.deleteById(id);
     }
 
-//    @PostMapping("/archive")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    private void archive(Integer id) {
-//        moviesService.archive(id);
-//    }
 
     @GetMapping("/archive")
     @ResponseStatus(HttpStatus.OK)
