@@ -44,6 +44,10 @@ public class MoviesRepository {
                 .getSingleResult();
     }
 
+//    public Movies findByID(Integer id) {
+//        return entityManager.find(Movies.class, id);
+//    }
+
     public void delete(Movies movieToDelete) {
         entityManager.remove(movieToDelete);
     }

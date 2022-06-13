@@ -5,6 +5,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import vizsgaremek.domain.Movies;
 import vizsgaremek.dto.MoviesInfo;
+import vizsgaremek.dto.MoviesInfoWithoutId;
 import vizsgaremek.dto.archive.DeletedMovies;
 import vizsgaremek.dto.commands.MovieCommand;
 import vizsgaremek.exceptionhandling.MovieNotFoundException;
@@ -27,8 +28,8 @@ public class MoviesService {
     }
 
     public MoviesInfo saveMovie(MovieCommand movieCommand) {
-        Movies AMovieToSave = modelMapper.map(movieCommand, Movies.class);
-        Movies savedMovie = moviesRepository.save(AMovieToSave);
+        Movies OneMovieToSave = modelMapper.map(movieCommand, Movies.class);
+        Movies savedMovie = moviesRepository.save(OneMovieToSave);
         return modelMapper.map(savedMovie, MoviesInfo.class);
     }
 
@@ -49,8 +50,8 @@ public class MoviesService {
     public MoviesInfo updateOrInsert(Integer id, MovieCommand command) {
         Movies movieToUpdate = modelMapper.map(command, Movies.class);
         movieToUpdate.setId(id);
-        Movies updatedMovie = moviesRepository.updateOrInsert(movieToUpdate);
-        return modelMapper.map(updatedMovie, MoviesInfo.class);
+        Movies movieSaved = moviesRepository.updateOrInsert(movieToUpdate);
+        return modelMapper.map(movieSaved, MoviesInfo.class);
     }
 
     public List<DeletedMovies> archiveList() {

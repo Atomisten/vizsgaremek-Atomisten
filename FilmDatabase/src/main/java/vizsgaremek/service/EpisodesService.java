@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import vizsgaremek.domain.Episodes;
+import vizsgaremek.domain.Series;
 import vizsgaremek.dto.EpisodesInfo;
 import vizsgaremek.dto.archive.DeletedEpisodes;
 import vizsgaremek.dto.commands.EpisodeCommand;
@@ -20,16 +21,28 @@ public class EpisodesService {
 
     private EpisodesRepository episodesRepository;
     private ModelMapper modelMapper;
+    private SeriesService seriesService;
 
-    public EpisodesService(EpisodesRepository episodesRepository, ModelMapper modelMapper) {
+    public EpisodesService(EpisodesRepository episodesRepository, ModelMapper modelMapper, SeriesService seriesService) {
         this.episodesRepository = episodesRepository;
         this.modelMapper = modelMapper;
+        this.seriesService = seriesService;
     }
 
-    public EpisodesInfo saveEpisode(EpisodeCommand episodeCommand) {
-        Episodes AnEpisodeToSave = modelMapper.map(episodeCommand, Episodes.class);
-        Episodes savedEpisode = episodesRepository.save(AnEpisodeToSave);
-        return modelMapper.map(savedEpisode, EpisodesInfo.class);
+    public EpisodesInfo saveEpisode(Integer id, EpisodeCommand episodeCommand) {
+//        Episodes toSave = new Episodes();
+//        toSave.setTitle(episodeCommand.getTitle());
+//        toSave.setDirector(episodeCommand.getDirector());
+        Episodes toSave = modelMapper.map(episodeCommand, Episodes.class);
+        Series seriesForEpisode = seriesFindById(id);
+        toSave.setSeries(seriesForEpisode);
+        Episodes saved = episodesRepository.save(toSave);
+        return mapToEpisodesInfo(saved);
+
+    }
+
+    public Series seriesFindById(Integer id) {
+        return seriesService.findByID(id);
     }
 
     public List<EpisodesInfo> listAllEpisodes() {
@@ -47,10 +60,12 @@ public class EpisodesService {
 
 
     public EpisodesInfo updateOrInsert(Integer id, EpisodeCommand command) {
-        Episodes episodeToUpdate = modelMapper.map(command, Episodes.class);
-        episodeToUpdate.setId(id);
-        Episodes updatedEpisode = episodesRepository.updateOrInsert(episodeToUpdate);
-        return modelMapper.map(updatedEpisode, EpisodesInfo.class);
+            Episodes foundById = episodesRepositoryExceptionHandler(id);
+            Episodes episodeToUpdate = modelMapper.map(command, Episodes.class);
+            episodeToUpdate.setId(id);
+            episodeToUpdate.setSeries(foundById.getSeries());
+            Episodes updatedEpisode = episodesRepository.updateOrInsert(episodeToUpdate);
+            return modelMapper.map(updatedEpisode, EpisodesInfo.class);
     }
 
     public List<DeletedEpisodes> archiveList() {
@@ -76,5 +91,26 @@ public class EpisodesService {
         } catch (EmptyResultDataAccessException e) {
             throw new EpisodeNotFoundException(id);
         }
+    }
+
+    public List<EpisodesInfo> listAllEpisodesForSeries(Integer id) {
+        List<Episodes> episodesList = episodesRepository.listAllEpisodesForService(id);
+        return episodesList.stream()
+                .map(this::mapToEpisodesInfo)
+                .collect(Collectors.toList());
+
+    }
+
+//    public EpisodesInfo setSeries(Integer episodeId, Integer seriesId) {
+//        Episodes episode = episodesRepository.findByID(episodeId);
+//        Series series = seriesFindById(seriesId);
+//        episode.setSeries(series);
+//        return mapToEpisodesInfo(episode);
+//    }
+
+    private EpisodesInfo mapToEpisodesInfo(Episodes episode) {
+        EpisodesInfo episodesInfo = modelMapper.map(episode, EpisodesInfo.class);
+        episodesInfo.setSeriesTitle(episode.getSeries().getTitle());
+        return episodesInfo;
     }
 }

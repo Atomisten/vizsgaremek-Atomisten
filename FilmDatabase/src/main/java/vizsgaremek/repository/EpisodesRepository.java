@@ -47,4 +47,11 @@ public class EpisodesRepository {
     public void delete(Episodes movieToDelete) {
         entityManager.remove(movieToDelete);
     }
+
+    public List<Episodes> listAllEpisodesForService(Integer id) {
+        return entityManager.createQuery("SELECT e FROM Episodes e " +
+                "WHERE e.series.id = :value ", Episodes.class)
+                .setParameter("value", id)
+                .getResultList();
+    }
 }

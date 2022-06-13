@@ -3,6 +3,7 @@ package vizsgaremek.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import vizsgaremek.dto.MoviesInfo;
+import vizsgaremek.dto.MoviesInfoWithoutId;
 import vizsgaremek.dto.archive.DeletedMovies;
 import vizsgaremek.dto.commands.MovieCommand;
 import vizsgaremek.service.MoviesService;

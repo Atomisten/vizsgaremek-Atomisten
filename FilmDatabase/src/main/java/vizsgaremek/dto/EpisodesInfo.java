@@ -12,7 +12,7 @@ public class EpisodesInfo {
 
     private Integer id;
     private String title;
-    private String author;
-    private Series series;
+    private String director;
+    private String seriesTitle;
 
 }

@@ -13,6 +13,5 @@ public class EpisodeCommand {
 
     private String title;
     private String director;
-    private Series series;
 
 }

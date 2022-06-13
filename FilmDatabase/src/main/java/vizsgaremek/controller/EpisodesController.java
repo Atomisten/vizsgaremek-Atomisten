@@ -6,46 +6,60 @@ import vizsgaremek.dto.EpisodesInfo;
 import vizsgaremek.dto.archive.DeletedEpisodes;
 import vizsgaremek.dto.commands.EpisodeCommand;
 import vizsgaremek.service.EpisodesService;
+import vizsgaremek.service.SeriesService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("api/episodes")
+@RequestMapping("api/series/")
 public class EpisodesController {
 
     private EpisodesService episodesService;
 
-    public EpisodesController(EpisodesService episodesService) {
+
+    public EpisodesController(EpisodesService episodesService, SeriesService seriesService) {
         this.episodesService = episodesService;
     }
 
-    @PostMapping
+    @PostMapping("{seriesId}/episodes")
     @ResponseStatus(HttpStatus.CREATED)
-    public EpisodesInfo save(@RequestBody EpisodeCommand command) {
-        return episodesService.saveEpisode(command);
+    public EpisodesInfo save(@PathVariable("seriesId") Integer id, @RequestBody EpisodeCommand command) {
+        return episodesService.saveEpisode(id, command);
     }
 
-    @GetMapping
+    @GetMapping("ALLepisodes")
     @ResponseStatus(HttpStatus.OK)
     public List<EpisodesInfo> findAll() {
         return episodesService.listAllEpisodes();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("api/series/{seriesId}/episodes/")
     @ResponseStatus(HttpStatus.OK)
-    public EpisodesInfo findById(@PathVariable("id") Integer id) {
+    public List<EpisodesInfo> findAllEpisodesForSeries(@PathVariable("seriesId") Integer id) {
+        return episodesService.listAllEpisodesForSeries(id);
+    }
+
+    @GetMapping("/ALLepisodes/{episodeId}")
+    @ResponseStatus(HttpStatus.OK)
+    public EpisodesInfo findById(@PathVariable("episodeId") Integer id) {
         return episodesService.findById(id);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("ALLepisodes/{episodeId}")
     @ResponseStatus(HttpStatus.OK)
-    public EpisodesInfo updateOrInsert(@PathVariable("id") Integer id, @RequestBody EpisodeCommand command) {
+    public EpisodesInfo updateOrInsert(@PathVariable("episodeId") Integer id, @RequestBody EpisodeCommand command) {
         return episodesService.updateOrInsert(id, command);
-    }
 
-    @DeleteMapping("/{id}")
+    }
+//    @PutMapping("Allepisodes/{episodeId}/setSeries")
+//    @ResponseStatus(HttpStatus.OK)
+//    public EpisodesInfo setSeries(@PathVariable("episodeId") Integer episodeId, @RequestBody Integer seriesId) {
+//            return episodesService.setSeries(episodeId,seriesId);
+//        }
+
+    @DeleteMapping("ALLepisodes/{episodeId}")
     @ResponseStatus(HttpStatus.OK)
-    public void delete(@PathVariable("id") Integer id) {
+    public void delete(@PathVariable("episodeId") Integer id) {
         episodesService.deleteById(id);
     }
 

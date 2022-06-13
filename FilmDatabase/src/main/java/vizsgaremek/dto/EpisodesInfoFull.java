@@ -4,13 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MoviesInfo {
-
+public class EpisodesInfoFull {
     private Integer id;
     private String title;
-    private String author;
-
+    private String director;
 }

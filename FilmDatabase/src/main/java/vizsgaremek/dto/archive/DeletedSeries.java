@@ -2,9 +2,10 @@ package vizsgaremek.dto.archive;
 
 import lombok.*;
 import org.hibernate.Hibernate;
-import vizsgaremek.domain.Series;
+
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -13,8 +14,8 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "deleted_episodes")
-public class DeletedEpisodes {
+@Table(name = "deleted_series")
+public class DeletedSeries {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,16 +34,15 @@ public class DeletedEpisodes {
     @Column(name = "author")
     private String author;
 
-    @ManyToOne
-    @JoinColumn(name = "series_id")
-    private DeletedSeries deletedSeries;
-
+    @OneToMany(mappedBy = "deletedSeries")                                                          //TODO hoppá, lehet hogy nem "deleted" név kell eléjük
+    @ToString.Exclude
+    private List<DeletedEpisodes> deletedEpisodesList;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        DeletedEpisodes that = (DeletedEpisodes) o;
+        DeletedSeries that = (DeletedSeries) o;
         return deleteId != null && Objects.equals(deleteId, that.deleteId);
     }
 
