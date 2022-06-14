@@ -14,9 +14,9 @@ public class SeriesRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public DeletedSeries archive(DeletedSeries deletedEpisode) {
-        entityManager.persist(deletedEpisode);
-        return deletedEpisode;
+    public DeletedSeries archive(DeletedSeries deletedSeries) {
+        entityManager.merge(deletedSeries);
+        return deletedSeries;
     }
 
     public List<DeletedSeries> archiveList() {

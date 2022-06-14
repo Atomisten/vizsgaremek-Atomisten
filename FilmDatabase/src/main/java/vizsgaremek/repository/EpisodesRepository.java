@@ -15,12 +15,12 @@ public class EpisodesRepository {
     private EntityManager entityManager;
 
     public DeletedEpisodes archive(DeletedEpisodes deletedEpisode) {
-        entityManager.persist(deletedEpisode);
+        entityManager.merge(deletedEpisode);
         return deletedEpisode;
     }
 
     public List<DeletedEpisodes> archiveList() {
-        return entityManager.createQuery("SELECT d from DeletedEpisodes d", DeletedEpisodes.class).getResultList();
+        return entityManager.createQuery("SELECT de from DeletedEpisodes de", DeletedEpisodes.class).getResultList();
     }
 
     public Episodes save(Episodes toSave) {
@@ -44,8 +44,8 @@ public class EpisodesRepository {
                 .getSingleResult();
     }
 
-    public void delete(Episodes movieToDelete) {
-        entityManager.remove(movieToDelete);
+    public void delete(Episodes episodeToDelete) {
+        entityManager.remove(episodeToDelete);
     }
 
     public List<Episodes> listAllEpisodesForService(Integer id) {
@@ -53,5 +53,15 @@ public class EpisodesRepository {
                 "WHERE e.series.id = :value ", Episodes.class)
                 .setParameter("value", id)
                 .getResultList();
+    }
+
+    public DeletedEpisodes archivedFindByID(Integer id) {
+        return entityManager.createQuery("SELECT de FROM DeletedEpisodes de WHERE de.id = :value", DeletedEpisodes.class)
+                .setParameter("value", id)
+                .getSingleResult();
+    }
+
+    public void deleteArchiveEpisode(DeletedEpisodes archivedToDelete ) {
+        entityManager.remove(archivedToDelete);
     }
 }

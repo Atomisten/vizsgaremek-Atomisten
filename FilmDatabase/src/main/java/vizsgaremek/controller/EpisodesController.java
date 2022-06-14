@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import vizsgaremek.dto.EpisodesInfo;
 import vizsgaremek.dto.archive.DeletedEpisodes;
+import vizsgaremek.dto.archive.dto.DeletedEpisodesInfo;
 import vizsgaremek.dto.commands.EpisodeCommand;
 import vizsgaremek.service.EpisodesService;
 import vizsgaremek.service.SeriesService;
@@ -64,10 +65,16 @@ public class EpisodesController {
     }
 
 
-    @GetMapping("/archive")
+    @GetMapping("/archive/deletedepisodes")
     @ResponseStatus(HttpStatus.OK)
-    public List<DeletedEpisodes> archiveList() {
+    public List<DeletedEpisodesInfo> archiveList() {
         return episodesService.archiveList();
+    }
+
+    @DeleteMapping("/archive/deletedepisodes/{deletedEpisodeId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteArchivedEpisode(@PathVariable("deletedEpisodeId") Integer id){
+        episodesService.deleteArchivedEpisodeById(id);
     }
 
 }

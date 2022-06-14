@@ -37,4 +37,11 @@ public class GlobalExceptionHandler {
                 "Series with id " + exception.getIdNotFound() + " is not found.");
         return new ResponseEntity<>(List.of(validationError), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(DeletedEpisodeNotFoundException.class)
+    public ResponseEntity<List<ValidationError>> handleParticipantNotFound(DeletedEpisodeNotFoundException exception) {
+        ValidationError validationError = new ValidationError("deletion_id",
+                "DeletedEpisode with id " + exception.getIdNotFound() + " is not found.");
+        return new ResponseEntity<>(List.of(validationError), HttpStatus.NOT_FOUND);
+    }
 }

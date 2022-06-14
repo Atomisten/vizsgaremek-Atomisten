@@ -5,6 +5,7 @@ import org.hibernate.Hibernate;
 import vizsgaremek.domain.Series;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
@@ -19,19 +20,22 @@ public class DeletedEpisodes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "deletion_id")
-    private Integer deleteId;
+    private Integer id;
 
 //    @Column(name = "date_time")
-//    private LocalDateTime localDateTime;                                                        //TODO törlés dátum
+//    private LocalDateTime localDateTime;
 
-    @Column(name = "movie_id")
-    private Integer id;
+    @Column(name = "episode_id")
+    private Integer episodeId;
+
+    @Column(name = "time_of_delete")
+    private LocalDateTime localDateTime;
 
     @Column(name = "title")
     private String title;
 
-    @Column(name = "author")
-    private String author;
+    @Column(name = "director")
+    private String director;
 
     @ManyToOne
     @JoinColumn(name = "series_id")
@@ -43,7 +47,7 @@ public class DeletedEpisodes {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         DeletedEpisodes that = (DeletedEpisodes) o;
-        return deleteId != null && Objects.equals(deleteId, that.deleteId);
+        return id != null && Objects.equals(id, that.id);
     }
 
     @Override

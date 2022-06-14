@@ -4,16 +4,21 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import vizsgaremek.domain.Episodes;
+import vizsgaremek.domain.Movies;
 import vizsgaremek.domain.Series;
 import vizsgaremek.dto.EpisodesInfoFull;
 import vizsgaremek.dto.SeriesInfo;
 import vizsgaremek.dto.SeriesInfoFull;
+import vizsgaremek.dto.archive.DeletedMovies;
+import vizsgaremek.dto.archive.DeletedSeries;
 import vizsgaremek.dto.commands.SeriesCommand;
 import vizsgaremek.exceptionhandling.EpisodeNotFoundException;
 import vizsgaremek.repository.EpisodesRepository;
 import vizsgaremek.repository.SeriesRepository;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -85,7 +90,32 @@ public class SeriesService {
     public SeriesInfo updateOrInsertSeries(Integer id, SeriesCommand seriesCommand) {
         Series seriesToUpdate = modelMapper.map(seriesCommand, Series.class);
         seriesToUpdate.setId(id);
-        Series updatedSeries = seriesRepository.updateOrInsert(seriesToUpdate);
-        return modelMapper.map(updatedSeries, SeriesInfo.class);
+        try {
+            Series foundByID = seriesRepository.findByID(seriesToUpdate.getId());
+            seriesToUpdate.setEpisodesList(foundByID.getEpisodesList());
+            Series updatedSeries = seriesRepository.updateOrInsert(seriesToUpdate);
+            SeriesInfo seriesInfo = modelMapper.map(updatedSeries, SeriesInfo.class);
+            seriesInfo.setNumberOfEpisodes(updatedSeries.getEpisodesList().size());
+            return seriesInfo;
+        } catch (EmptyResultDataAccessException e) {
+            Series updatedSeries = seriesRepository.updateOrInsert(seriesToUpdate);
+            return modelMapper.map(updatedSeries, SeriesInfo.class);
+        }
+    }
+
+
+
+    public void deleteById(Integer id) {
+        Series seriesFound = seriesRepositoryExceptionHandler(id);
+        archiveSeries(id);
+        seriesRepository.delete(seriesFound);
+    }
+
+    public DeletedSeries archiveSeries(Integer id) {
+        Series seriesFound = seriesRepository.findByID(id);
+        DeletedSeries seriesToArchive = modelMapper.map(seriesFound, DeletedSeries.class);
+        seriesToArchive.setSeriesId(id);
+        seriesToArchive.setLocalDateTime(LocalDateTime.now());
+        return seriesRepository.archive(seriesToArchive);
     }
 }

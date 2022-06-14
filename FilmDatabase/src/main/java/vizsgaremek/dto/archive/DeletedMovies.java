@@ -18,11 +18,11 @@ public class DeletedMovies {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "deletion_id")
-    private Integer deleteId;
+    private Integer id;
 //    @Column(name = "date_time")
 //    private LocalDateTime localDateTime;                                                        //TODO törlés dátum
     @Column(name = "movie_id")
-    private Integer id;
+    private Integer movieId;
 
     @Column(name = "title")
     private String title;
@@ -35,7 +35,7 @@ public class DeletedMovies {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         DeletedMovies that = (DeletedMovies) o;
-        return deleteId != null && Objects.equals(deleteId, that.deleteId);
+        return id != null && Objects.equals(id, that.id);
     }
 
     @Override

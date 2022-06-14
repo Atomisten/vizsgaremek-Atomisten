@@ -7,11 +7,15 @@ import vizsgaremek.domain.Episodes;
 import vizsgaremek.domain.Series;
 import vizsgaremek.dto.EpisodesInfo;
 import vizsgaremek.dto.archive.DeletedEpisodes;
+import vizsgaremek.dto.archive.DeletedSeries;
+import vizsgaremek.dto.archive.dto.DeletedEpisodesInfo;
 import vizsgaremek.dto.commands.EpisodeCommand;
+import vizsgaremek.exceptionhandling.DeletedEpisodeNotFoundException;
 import vizsgaremek.exceptionhandling.EpisodeNotFoundException;
 import vizsgaremek.repository.EpisodesRepository;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,8 +72,16 @@ public class EpisodesService {
             return modelMapper.map(updatedEpisode, EpisodesInfo.class);
     }
 
-    public List<DeletedEpisodes> archiveList() {
-        return episodesRepository.archiveList();
+    public List<DeletedEpisodesInfo> archiveList() {
+        return episodesRepository.archiveList().stream()
+                .map(deletedEpisodes -> {
+                    DeletedEpisodesInfo deletedEpisodesInfo = modelMapper.map(deletedEpisodes, DeletedEpisodesInfo.class);
+                    deletedEpisodesInfo.setEpisodeId(deletedEpisodes.getEpisodeId());
+                    deletedEpisodesInfo.setSeriesTitle(deletedEpisodes.getDeletedSeries().getTitle());
+                    deletedEpisodesInfo.setSeriesId(deletedEpisodes.getDeletedSeries().getSeriesId());
+                    return deletedEpisodesInfo;
+                })
+                .collect(Collectors.toList());
     }
 
     public void deleteById(Integer id) {
@@ -80,7 +92,13 @@ public class EpisodesService {
 
     private DeletedEpisodes archive(Integer id) {
         Episodes episodeFound = episodesRepository.findByID(id);
+        Series seriesOfEpisode = episodeFound.getSeries();
+        DeletedSeries deletedSeries = seriesService.archiveSeries(seriesOfEpisode.getId());
         DeletedEpisodes episodeToArchive = modelMapper.map(episodeFound, DeletedEpisodes.class);
+//        episodeToArchive.setId(null);
+        episodeToArchive.setEpisodeId(id);
+        episodeToArchive.setLocalDateTime(LocalDateTime.now());
+        episodeToArchive.setDeletedSeries(deletedSeries);
         return episodesRepository.archive(episodeToArchive);
     }
 
@@ -112,5 +130,19 @@ public class EpisodesService {
         EpisodesInfo episodesInfo = modelMapper.map(episode, EpisodesInfo.class);
         episodesInfo.setSeriesTitle(episode.getSeries().getTitle());
         return episodesInfo;
+    }
+
+    public void deleteArchivedEpisodeById(Integer id) {
+        DeletedEpisodes deletedEpisode = deletedEpisodesRepositoryExceptionHandler(id);
+        episodesRepository.deleteArchiveEpisode(deletedEpisode);
+    }
+
+
+    public DeletedEpisodes deletedEpisodesRepositoryExceptionHandler(Integer id) {
+        try {
+            return episodesRepository.archivedFindByID(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new DeletedEpisodeNotFoundException(id);
+        }
     }
 }
