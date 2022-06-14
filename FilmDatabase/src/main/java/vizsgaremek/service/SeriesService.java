@@ -19,6 +19,7 @@ import vizsgaremek.repository.SeriesRepository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -93,41 +94,54 @@ public class SeriesService {
     }
 
 
-    public void deleteById(Integer id) {
-        Series seriesFound = seriesRepositoryExceptionHandler(id);
-        archive(id);
-        seriesRepository.deleteAllFromSeries(id);
+    public void deleteById(Integer seriesId) {
+        Series seriesFound = seriesRepositoryExceptionHandler(seriesId);
+        archive(seriesId);
+        seriesRepository.deleteAllFromSeries(seriesId);
         seriesRepository.delete(seriesFound);
     }
 
-    private DeletedSeries archive(Integer id) {
-        DeletedSeries deletedSeries = archiveSeriesById(id);
-        List<Episodes> episodesList = episodesRepository.listAllEpisodesForService(id);
-        List<DeletedEpisodes> deletedEpisodesList = episodesList.stream()
-                .map(episodes -> {
-                    DeletedEpisodes deletedEpisode = modelMapper.map(episodes, DeletedEpisodes.class);
-                    deletedEpisode.setEpisodeId(episodes.getId());
-                    deletedEpisode.setLocalDateTime(LocalDateTime.now());
-                    deletedEpisode.setDeletedSeries(deletedSeries);
-                    episodesRepository.archive(deletedEpisode);
-
-                    return deletedEpisode;
-                })
-                .collect(Collectors.toList());
-        deletedSeries.setDeletedEpisodesList(deletedEpisodesList);
+    private DeletedSeries archive(Integer seriesId) {
+        Series seriesById = seriesRepository.findByID(seriesId);
+        DeletedSeries deletedSeries = modelMapper.map(seriesById, DeletedSeries.class);
+        deletedSeries.setSeriesId(seriesId);
+        deletedSeries.setLocalDateTime(LocalDateTime.now());
+//        DeletedSeries deletedSeries = archiveSeriesById(seriesId);
+        List<Episodes> episodesList = episodesRepository.listAllEpisodesForService(seriesId);
+//        List<DeletedEpisodes> deletedEpisodesList = episodesList.stream()
+//                .map(episodes -> {
+//                    DeletedEpisodes deletedEpisode = modelMapper.map(episodes, DeletedEpisodes.class);
+//                    deletedEpisode.setEpisodeId(episodes.getId());
+//                    deletedEpisode.setLocalDateTime(LocalDateTime.now());
+//                    deletedEpisode.setDeletedSeries(deletedSeries);
+//                    episodesRepository.archive(deletedEpisode);
+//
+//                    return deletedEpisode;
+//                })
+//                .collect(Collectors.toList());
+        List<DeletedEpisodes> deletedEpisodesList = new ArrayList<>();
+        for (Episodes episodes : episodesList) {
+            DeletedEpisodes deletedEpisode = modelMapper.map(episodes, DeletedEpisodes.class);
+            deletedEpisode.setEpisodeId(episodes.getId());
+            deletedEpisode.setLocalDateTime(LocalDateTime.now());
+            deletedEpisode.setDeletedSeries(deletedSeries);
+//            episodesRepository.archive(deletedEpisode);
+            deletedEpisodesList.add(deletedEpisode);
+        }
+//        deletedSeries.setDeletedEpisodesList(deletedEpisodesList);
         return seriesRepository.archive(deletedSeries);
 
 
     }
 
-    public DeletedSeries archiveSeriesById(Integer id) {
+    public DeletedSeries archiveSeriesById(Integer seriesId) {
         try {
-            DeletedSeries deletedSeriesFound = seriesRepository.ArchivefindBySeriesId(id);
+            DeletedSeries deletedSeriesFound = seriesRepository.ArchivefindBySeriesId(seriesId);
             return seriesRepository.archive(deletedSeriesFound);
         } catch (EmptyResultDataAccessException e) {
-            Series seriesFound = seriesRepository.findByID(id);
+            Series seriesFound = seriesRepository.findByID(seriesId);
             DeletedSeries seriesToArchive = modelMapper.map(seriesFound, DeletedSeries.class);
-            seriesToArchive.setSeriesId(id);
+            seriesToArchive.setSeriesId(seriesId);
             seriesToArchive.setLocalDateTime(LocalDateTime.now());
             return seriesRepository.archive(seriesToArchive);
         }

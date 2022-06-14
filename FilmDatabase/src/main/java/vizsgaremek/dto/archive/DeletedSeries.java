@@ -35,8 +35,7 @@ public class DeletedSeries {
     @Column(name = "author")
     private String author;
 
-    @OneToMany(mappedBy = "deletedSeries")
-    @ToString.Exclude
+    @OneToMany(mappedBy = "deletedSeries", fetch = FetchType.EAGER)
     private List<DeletedEpisodes> deletedEpisodesList;
 
     @Override

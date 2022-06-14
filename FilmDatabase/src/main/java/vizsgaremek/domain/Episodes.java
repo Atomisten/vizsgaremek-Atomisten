@@ -26,7 +26,7 @@ public class Episodes {
     @Column(name = "director")
     private String director;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "series_id")
     private Series series;
 
