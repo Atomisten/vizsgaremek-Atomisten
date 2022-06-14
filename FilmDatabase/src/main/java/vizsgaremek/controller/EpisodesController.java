@@ -12,7 +12,7 @@ import vizsgaremek.service.SeriesService;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/series/")
+@RequestMapping("api/")
 public class EpisodesController {
 
     private EpisodesService episodesService;
@@ -22,31 +22,31 @@ public class EpisodesController {
         this.episodesService = episodesService;
     }
 
-    @PostMapping("{seriesId}/episodes")
+    @PostMapping("series/{seriesId}/episodes")
     @ResponseStatus(HttpStatus.CREATED)
     public EpisodesInfo save(@PathVariable("seriesId") Integer id, @RequestBody EpisodeCommand command) {
         return episodesService.saveEpisode(id, command);
     }
 
-    @GetMapping("ALLepisodes")
+    @GetMapping("series/ALLepisodes")
     @ResponseStatus(HttpStatus.OK)
     public List<EpisodesInfo> findAll() {
         return episodesService.listAllEpisodes();
     }
 
-    @GetMapping("api/series/{seriesId}/episodes/")
+    @GetMapping("series/{seriesId}/episodes/")
     @ResponseStatus(HttpStatus.OK)
     public List<EpisodesInfo> findAllEpisodesForSeries(@PathVariable("seriesId") Integer id) {
         return episodesService.listAllEpisodesForSeries(id);
     }
 
-    @GetMapping("/ALLepisodes/{episodeId}")
+    @GetMapping("series/ALLepisodes/{episodeId}")
     @ResponseStatus(HttpStatus.OK)
     public EpisodesInfo findById(@PathVariable("episodeId") Integer id) {
         return episodesService.findById(id);
     }
 
-    @PutMapping("ALLepisodes/{episodeId}")
+    @PutMapping("series/ALLepisodes/{episodeId}")
     @ResponseStatus(HttpStatus.OK)
     public EpisodesInfo updateOrInsert(@PathVariable("episodeId") Integer id, @RequestBody EpisodeCommand command) {
         return episodesService.updateOrInsert(id, command);
@@ -58,7 +58,7 @@ public class EpisodesController {
 //            return episodesService.setSeries(episodeId,seriesId);
 //        }
 
-    @DeleteMapping("ALLepisodes/{episodeId}")
+    @DeleteMapping("series/ALLepisodes/{episodeId}")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable("episodeId") Integer id) {
         episodesService.deleteById(id);
@@ -75,6 +75,12 @@ public class EpisodesController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteArchivedEpisode(@PathVariable("deletedEpisodeId") Integer id){
         episodesService.deleteArchivedEpisodeById(id);
+    }
+
+    @DeleteMapping("/archive/deletedepisodes/PURGE")
+    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+    public void purge() {
+        episodesService.purge();
     }
 
 }

@@ -22,9 +22,6 @@ public class DeletedEpisodes {
     @Column(name = "deletion_id")
     private Integer id;
 
-//    @Column(name = "date_time")
-//    private LocalDateTime localDateTime;
-
     @Column(name = "episode_id")
     private Integer episodeId;
 
@@ -37,7 +34,7 @@ public class DeletedEpisodes {
     @Column(name = "director")
     private String director;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "series_id")
     private DeletedSeries deletedSeries;
 

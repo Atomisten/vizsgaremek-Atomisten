@@ -4,13 +4,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import vizsgaremek.dto.SeriesInfo;
 import vizsgaremek.dto.SeriesInfoFull;
+import vizsgaremek.dto.archive.dto.DeletedSeriesInfo;
 import vizsgaremek.dto.commands.SeriesCommand;
 import vizsgaremek.service.SeriesService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("api/series")
+@RequestMapping("api/")
 public class SeriesController {
 
 
@@ -20,28 +21,46 @@ public class SeriesController {
         this.seriesService = seriesService;
     }
 
-    @PostMapping
+    @PostMapping("series")
     @ResponseStatus(HttpStatus.CREATED)
     public SeriesInfo save(@RequestBody SeriesCommand command) {
         return seriesService.saveSeries(command);
     }
 
-    @GetMapping
+    @GetMapping("Allseries")
     @ResponseStatus(HttpStatus.OK)
     public List<SeriesInfo> findAll() {
         return seriesService.listAllSeries();
     }
 
-    @GetMapping("/{seriesId}")
+    @GetMapping("series/{seriesId}")
     @ResponseStatus(HttpStatus.OK)
     public SeriesInfoFull findSeriesByIdFull(@PathVariable("seriesId") Integer seriesId) {
         return seriesService.findByIdFull(seriesId);
     }
 
-    @PutMapping("/{seriesId}")
+    @PutMapping("series/{seriesId}")
     @ResponseStatus(HttpStatus.OK)
     public SeriesInfo updateOrInsert(@PathVariable("seriesId") Integer id, SeriesCommand seriesCommand) {
         return seriesService.updateOrInsertSeries(id, seriesCommand);
     }
+
+    @GetMapping("archive/deletedseries")
+    @ResponseStatus(HttpStatus.OK)
+    public List<DeletedSeriesInfo> archiveList() {
+        return seriesService.archiveList();
+    }
+    @DeleteMapping("series/{seriesId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteSeries (@PathVariable("seriesId") Integer id) {
+        seriesService.deleteById(id);
+    }
+
+
+//    @DeleteMapping("archive/deletedseries/{seriesId}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public void deleteArchivedSeries (@PathVariable("seriesId") Integer id) {
+//        seriesService.d
+//    }
 
 }

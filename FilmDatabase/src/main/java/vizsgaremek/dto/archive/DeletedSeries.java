@@ -23,9 +23,6 @@ public class DeletedSeries {
     @Column(name = "deletion_id")
     private Integer id;
 
-//    @Column(name = "date_time")
-//    private LocalDateTime localDateTime;
-
     @Column(name = "series_id")
     private Integer seriesId;
 
@@ -38,7 +35,7 @@ public class DeletedSeries {
     @Column(name = "author")
     private String author;
 
-    @OneToMany(mappedBy = "deletedSeries")                                                          //TODO hoppá, lehet hogy nem "deleted" név kell eléjük
+    @OneToMany(mappedBy = "deletedSeries")
     @ToString.Exclude
     private List<DeletedEpisodes> deletedEpisodesList;
 

@@ -15,8 +15,7 @@ public class SeriesRepository {
     private EntityManager entityManager;
 
     public DeletedSeries archive(DeletedSeries deletedSeries) {
-        entityManager.merge(deletedSeries);
-        return deletedSeries;
+        return entityManager.merge(deletedSeries);
     }
 
     public List<DeletedSeries> archiveList() {
@@ -33,15 +32,6 @@ public class SeriesRepository {
         return entityManager.createQuery("SELECT s FROM Series s", Series.class).getResultList();
     }
 
-//    public List<Hive> findAll() {
-//        return entityManager.createQuery("SELECT h FROM Hive h JOIN h.bees b WHERE b.pps = 88", Hive.class)
-//                .getResultList();
-//    }
-//
-//    public Hive findById(Integer id) {
-//        return entityManager.find(Hive.class, id);
-//    }
-
     public Series updateOrInsert(Series toUpdate) {
         return entityManager.merge(toUpdate);
     }
@@ -52,7 +42,19 @@ public class SeriesRepository {
                 .getSingleResult();
     }
 
-    public void delete(Series movieToDelete) {
-        entityManager.remove(movieToDelete);
+    public DeletedSeries ArchivefindBySeriesId(Integer seriesId) {
+        return entityManager.createQuery("SELECT ds FROM DeletedSeries ds WHERE ds.seriesId = :value", DeletedSeries.class)
+                .setParameter("value", seriesId)
+                .getSingleResult();
+    }
+
+    public void delete(Series seriesToDelete) {
+        entityManager.remove(seriesToDelete);
+    }
+
+    public void deleteAllFromSeries(Integer id) {
+        entityManager.createQuery("DELETE FROM Episodes WHERE series.id = :value")
+                .setParameter("value", id)
+                .executeUpdate();
     }
 }

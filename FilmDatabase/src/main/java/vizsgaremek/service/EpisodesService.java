@@ -93,9 +93,8 @@ public class EpisodesService {
     private DeletedEpisodes archive(Integer id) {
         Episodes episodeFound = episodesRepository.findByID(id);
         Series seriesOfEpisode = episodeFound.getSeries();
-        DeletedSeries deletedSeries = seriesService.archiveSeries(seriesOfEpisode.getId());
+        DeletedSeries deletedSeries = seriesService.archiveSeriesByEpisode(seriesOfEpisode.getId());
         DeletedEpisodes episodeToArchive = modelMapper.map(episodeFound, DeletedEpisodes.class);
-//        episodeToArchive.setId(null);
         episodeToArchive.setEpisodeId(id);
         episodeToArchive.setLocalDateTime(LocalDateTime.now());
         episodeToArchive.setDeletedSeries(deletedSeries);
@@ -144,5 +143,9 @@ public class EpisodesService {
         } catch (EmptyResultDataAccessException e) {
             throw new DeletedEpisodeNotFoundException(id);
         }
+    }
+
+    public void purge() {
+        episodesRepository.purge();
     }
 }

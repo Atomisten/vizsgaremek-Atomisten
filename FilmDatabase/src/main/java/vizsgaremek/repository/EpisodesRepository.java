@@ -15,8 +15,12 @@ public class EpisodesRepository {
     private EntityManager entityManager;
 
     public DeletedEpisodes archive(DeletedEpisodes deletedEpisode) {
-        entityManager.merge(deletedEpisode);
-        return deletedEpisode;
+        return entityManager.merge(deletedEpisode);
+
+    }
+
+    public void flush(){
+        entityManager.flush();
     }
 
     public List<DeletedEpisodes> archiveList() {
@@ -63,5 +67,14 @@ public class EpisodesRepository {
 
     public void deleteArchiveEpisode(DeletedEpisodes archivedToDelete ) {
         entityManager.remove(archivedToDelete);
+    }
+
+    public void purge() {
+        entityManager.createQuery("DELETE FROM DeletedEpisodes de").executeUpdate();
+    }
+
+    public DeletedEpisodes archiveP(DeletedEpisodes deletedEpisodeToSave) {
+        entityManager.persist(deletedEpisodeToSave);
+        return deletedEpisodeToSave;
     }
 }
