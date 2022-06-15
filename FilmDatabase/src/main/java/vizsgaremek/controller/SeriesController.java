@@ -45,7 +45,7 @@ public class SeriesController {
         return seriesService.updateOrInsertSeries(id, seriesCommand);
     }
 
-    @GetMapping("archive/deletedseries")
+    @GetMapping("archive/ALLdeletedseries")
     @ResponseStatus(HttpStatus.OK)
     public List<DeletedSeriesInfo> archiveList() {
         return seriesService.archiveList();
@@ -57,10 +57,17 @@ public class SeriesController {
     }
 
 
-//    @DeleteMapping("archive/deletedseries/{seriesId}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void deleteArchivedSeries (@PathVariable("seriesId") Integer id) {
-//        seriesService.d
-//    }
+    @DeleteMapping("archive/deletedseries/{seriesId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteArchivedSeries (@PathVariable("seriesId") Integer id) {
+        seriesService.deleteArchivedSeries(id);
+    }
+
+    @DeleteMapping("/archive/deletedseries/PURGE")
+    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+    public void purge() {
+        seriesService.purgeAll();
+    }
+
 
 }

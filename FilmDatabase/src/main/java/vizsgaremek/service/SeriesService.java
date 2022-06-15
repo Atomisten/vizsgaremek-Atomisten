@@ -12,14 +12,13 @@ import vizsgaremek.dto.archive.DeletedEpisodes;
 import vizsgaremek.dto.archive.DeletedSeries;
 import vizsgaremek.dto.archive.dto.DeletedSeriesInfo;
 import vizsgaremek.dto.commands.SeriesCommand;
-import vizsgaremek.exceptionhandling.EpisodeNotFoundException;
+import vizsgaremek.exceptionhandling.DeletedSeriesNotFoundException;
 import vizsgaremek.exceptionhandling.SeriesNotFoundException;
 import vizsgaremek.repository.EpisodesRepository;
 import vizsgaremek.repository.SeriesRepository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -106,30 +105,19 @@ public class SeriesService {
         DeletedSeries deletedSeries = modelMapper.map(seriesById, DeletedSeries.class);
         deletedSeries.setSeriesId(seriesId);
         deletedSeries.setLocalDateTime(LocalDateTime.now());
-//        DeletedSeries deletedSeries = archiveSeriesById(seriesId);
-        List<Episodes> episodesList = episodesRepository.listAllEpisodesForService(seriesId);
-//        List<DeletedEpisodes> deletedEpisodesList = episodesList.stream()
-//                .map(episodes -> {
-//                    DeletedEpisodes deletedEpisode = modelMapper.map(episodes, DeletedEpisodes.class);
-//                    deletedEpisode.setEpisodeId(episodes.getId());
-//                    deletedEpisode.setLocalDateTime(LocalDateTime.now());
-//                    deletedEpisode.setDeletedSeries(deletedSeries);
-//                    episodesRepository.archive(deletedEpisode);
-//
-//                    return deletedEpisode;
-//                })
-//                .collect(Collectors.toList());
-        List<DeletedEpisodes> deletedEpisodesList = new ArrayList<>();
-        for (Episodes episodes : episodesList) {
-            DeletedEpisodes deletedEpisode = modelMapper.map(episodes, DeletedEpisodes.class);
-            deletedEpisode.setEpisodeId(episodes.getId());
-            deletedEpisode.setLocalDateTime(LocalDateTime.now());
-            deletedEpisode.setDeletedSeries(deletedSeries);
-//            episodesRepository.archive(deletedEpisode);
-            deletedEpisodesList.add(deletedEpisode);
-        }
-//        deletedSeries.setDeletedEpisodesList(deletedEpisodesList);
-        return seriesRepository.archive(deletedSeries);
+        DeletedSeries archivedWithoutEpisodes = seriesRepository.archive(deletedSeries);
+        List<Episodes> episodesList1 = seriesById.getEpisodesList();
+        List<DeletedEpisodes> deletedEpisodesList1 = episodesList1.stream()
+                .map(episodes -> {
+                    DeletedEpisodes deletedEpisodes = modelMapper.map(episodes, DeletedEpisodes.class);
+                    deletedEpisodes.setEpisodeId(episodes.getId());
+                    deletedEpisodes.setLocalDateTime(LocalDateTime.now());
+                    deletedEpisodes.setDeletedSeries(archivedWithoutEpisodes);
+                    return episodesRepository.archive(deletedEpisodes);
+                })
+                .collect(Collectors.toList());
+        archivedWithoutEpisodes.setDeletedEpisodesList(deletedEpisodesList1);
+        return archivedWithoutEpisodes;
 
 
     }
@@ -169,5 +157,24 @@ public class SeriesService {
                     return deletedSeriesInfo;
                 })
                 .collect(Collectors.toList());
+    }
+
+    public void deleteArchivedSeries(Integer deletedSeriesId) {
+        DeletedSeries deletedSeries = deletedSeriesRepositoryExceptionHandler(deletedSeriesId);
+        seriesRepository.deleteAllEpisodesFromArchivedSeries(deletedSeriesId);
+        seriesRepository.deleteArchivedSeries(deletedSeries);
+    }
+
+    public DeletedSeries deletedSeriesRepositoryExceptionHandler(Integer id) {
+        try {
+            return seriesRepository.ArchivefindBySeriesId(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new DeletedSeriesNotFoundException(id);
+        }
+    }
+
+    public void purgeAll() {
+        episodesRepository.purge();
+        seriesRepository.purge();
     }
 }

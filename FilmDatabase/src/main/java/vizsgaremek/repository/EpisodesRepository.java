@@ -16,7 +16,6 @@ public class EpisodesRepository {
 
     public DeletedEpisodes archive(DeletedEpisodes deletedEpisode) {
         return entityManager.merge(deletedEpisode);
-
     }
 
     public void flush(){

@@ -35,7 +35,7 @@ public class DeletedEpisodes {
     private String director;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "series_id")
+    @JoinColumn(name = "dseries_deletion_id")
     private DeletedSeries deletedSeries;
 
 

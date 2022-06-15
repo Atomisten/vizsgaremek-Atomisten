@@ -18,6 +18,11 @@ public class SeriesRepository {
         return entityManager.merge(deletedSeries);
     }
 
+    public DeletedSeries archiveP(DeletedSeries deletedSeries) {
+        entityManager.persist(deletedSeries);
+        return deletedSeries;
+    }
+
     public List<DeletedSeries> archiveList() {
         return entityManager.createQuery("SELECT d from DeletedSeries d", DeletedSeries.class).getResultList();
     }
@@ -56,5 +61,19 @@ public class SeriesRepository {
         entityManager.createQuery("DELETE FROM Episodes WHERE series.id = :value")
                 .setParameter("value", id)
                 .executeUpdate();
+    }
+
+    public void deleteAllEpisodesFromArchivedSeries(Integer id) {
+        entityManager.createQuery("DELETE FROM DeletedEpisodes Where deletedSeries.id = :value")
+                .setParameter("value", id)
+                .executeUpdate();
+    }
+
+    public void deleteArchivedSeries(DeletedSeries deletedSeries) {
+        entityManager.remove(deletedSeries);
+    }
+
+    public void purge() {
+        entityManager.createQuery("DELETE FROM DeletedSeries ds").executeUpdate();
     }
 }

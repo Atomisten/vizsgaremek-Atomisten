@@ -65,7 +65,7 @@ public class EpisodesController {
     }
 
 
-    @GetMapping("/archive/deletedepisodes")
+    @GetMapping("/archive/ALLdeletedepisodes")
     @ResponseStatus(HttpStatus.OK)
     public List<DeletedEpisodesInfo> archiveList() {
         return episodesService.archiveList();
