@@ -34,19 +34,12 @@ public class EpisodesService {
     }
 
     public EpisodesInfo saveEpisode(Integer id, EpisodeCommand episodeCommand) {
-//        Episodes toSave = new Episodes();
-//        toSave.setTitle(episodeCommand.getTitle());
-//        toSave.setDirector(episodeCommand.getDirector());
         Episodes toSave = modelMapper.map(episodeCommand, Episodes.class);
-        Series seriesForEpisode = seriesFindById(id);
+        Series seriesForEpisode = seriesService.seriesRepositoryExceptionHandler(id);
         toSave.setSeries(seriesForEpisode);
         Episodes saved = episodesRepository.save(toSave);
         return mapToEpisodesInfo(saved);
 
-    }
-
-    public Series seriesFindById(Integer id) {
-        return seriesService.findByID(id);
     }
 
     public List<EpisodesInfo> listAllEpisodes() {
@@ -58,7 +51,7 @@ public class EpisodesService {
 
 
     public EpisodesInfo findById(Integer id) {
-        Episodes episodeById = episodesRepository.findByID(id);
+        Episodes episodeById = episodesRepositoryExceptionHandler(id);
         return modelMapper.map(episodeById, EpisodesInfo.class);
     }
 
@@ -111,6 +104,7 @@ public class EpisodesService {
     }
 
     public List<EpisodesInfo> listAllEpisodesForSeries(Integer id) {
+        seriesService.seriesRepositoryExceptionHandler(id);
         List<Episodes> episodesList = episodesRepository.listAllEpisodesForService(id);
         return episodesList.stream()
                 .map(this::mapToEpisodesInfo)

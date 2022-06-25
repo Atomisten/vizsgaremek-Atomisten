@@ -42,7 +42,7 @@ public class MoviesService {
 
 
     public MoviesInfo findById(Integer id) {
-        Movies movieById = moviesRepository.findByID(id);
+        Movies movieById = moviesRepositoryExceptionHandler(id);
         return modelMapper.map(movieById, MoviesInfo.class);
     }
 
