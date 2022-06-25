@@ -20,7 +20,7 @@ public class DeletedSeries {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "deletion_id")
+    @Column(name = "deleted_series_id")
     private Integer id;
 
     @Column(name = "series_id")

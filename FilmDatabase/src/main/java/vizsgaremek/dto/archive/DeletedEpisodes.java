@@ -19,7 +19,7 @@ public class DeletedEpisodes {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "deletion_id")
+    @Column(name = "deleted_episode_id")
     private Integer id;
 
     @Column(name = "episode_id")
@@ -35,7 +35,7 @@ public class DeletedEpisodes {
     private String director;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "dseries_deletion_id")
+    @JoinColumn(name = "deleted_series_id")
     private DeletedSeries deletedSeries;
 
 

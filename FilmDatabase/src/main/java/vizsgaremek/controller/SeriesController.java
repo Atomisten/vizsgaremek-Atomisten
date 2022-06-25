@@ -64,7 +64,7 @@ public class SeriesController {
     }
 
     @DeleteMapping("/archive/deletedseries/PURGE")
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)                               //Easter Egg
     public void purge() {
         seriesService.purgeAll();
     }

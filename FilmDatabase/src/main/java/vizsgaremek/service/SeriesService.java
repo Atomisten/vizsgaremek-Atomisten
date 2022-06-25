@@ -116,7 +116,7 @@ public class SeriesService {
                     return episodesRepository.archive(deletedEpisodes);
                 })
                 .collect(Collectors.toList());
-        archivedWithoutEpisodes.setDeletedEpisodesList(deletedEpisodesList1);
+        archivedWithoutEpisodes.setDeletedEpisodesList(deletedEpisodesList1);               //TODO ez elvileg nem kell
         return archivedWithoutEpisodes;
 
 

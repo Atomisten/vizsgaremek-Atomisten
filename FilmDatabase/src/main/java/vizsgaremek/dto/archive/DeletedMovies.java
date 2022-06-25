@@ -17,7 +17,7 @@ public class DeletedMovies {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "deletion_id")
+    @Column(name = "deleted_movie_id")
     private Integer id;
 //    @Column(name = "date_time")
 //    private LocalDateTime localDateTime;                                                        //TODO törlés dátum
