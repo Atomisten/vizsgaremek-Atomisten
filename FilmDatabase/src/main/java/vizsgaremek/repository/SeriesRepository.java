@@ -2,7 +2,7 @@ package vizsgaremek.repository;
 
 import org.springframework.stereotype.Repository;
 import vizsgaremek.domain.Series;
-import vizsgaremek.dto.archive.DeletedSeries;
+import vizsgaremek.domain.archive.DeletedSeries;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,18 +14,6 @@ public class SeriesRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public DeletedSeries archive(DeletedSeries deletedSeries) {
-        return entityManager.merge(deletedSeries);
-    }
-
-    public DeletedSeries archiveP(DeletedSeries deletedSeries) {
-        entityManager.persist(deletedSeries);
-        return deletedSeries;
-    }
-
-    public List<DeletedSeries> archiveList() {
-        return entityManager.createQuery("SELECT d from DeletedSeries d", DeletedSeries.class).getResultList();
-    }
 
     public Series save(Series toSave) {
         entityManager.persist(toSave);
@@ -41,20 +29,10 @@ public class SeriesRepository {
         return entityManager.merge(toUpdate);
     }
 
-    public Series findByID(Integer id) {
+    public Series findById(Integer id) {
         return entityManager.createQuery("SELECT s FROM Series s WHERE s.id = :value", Series.class)
                 .setParameter("value", id)
                 .getSingleResult();
-    }
-
-    public DeletedSeries ArchivefindBySeriesId(Integer seriesId) {
-        return entityManager.createQuery("SELECT ds FROM DeletedSeries ds WHERE ds.seriesId = :value", DeletedSeries.class)
-                .setParameter("value", seriesId)
-                .getSingleResult();
-    }
-
-    public void delete(Series seriesToDelete) {
-        entityManager.remove(seriesToDelete);
     }
 
     public void deleteAllFromSeries(Integer id) {
@@ -63,17 +41,12 @@ public class SeriesRepository {
                 .executeUpdate();
     }
 
-    public void deleteAllEpisodesFromArchivedSeries(Integer id) {
-        entityManager.createQuery("DELETE FROM DeletedEpisodes Where deletedSeries.id = :value")
-                .setParameter("value", id)
-                .executeUpdate();
+
+
+    public void delete(Series seriesToDelete) {
+        entityManager.remove(seriesToDelete);
     }
 
-    public void deleteArchivedSeries(DeletedSeries deletedSeries) {
-        entityManager.remove(deletedSeries);
-    }
 
-    public void purge() {
-        entityManager.createQuery("DELETE FROM DeletedSeries ds").executeUpdate();
-    }
+
 }

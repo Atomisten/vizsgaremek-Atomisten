@@ -2,7 +2,7 @@ package vizsgaremek.repository;
 
 import org.springframework.stereotype.Repository;
 import vizsgaremek.domain.Movies;
-import vizsgaremek.dto.archive.DeletedMovies;
+import vizsgaremek.domain.archive.DeletedMovies;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

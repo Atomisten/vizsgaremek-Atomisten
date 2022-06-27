@@ -3,12 +3,12 @@ package vizsgaremek.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import vizsgaremek.dto.EpisodesInfo;
-import vizsgaremek.dto.archive.DeletedEpisodes;
-import vizsgaremek.dto.archive.dto.DeletedEpisodesInfo;
+import vizsgaremek.dto.DeletedEpisodesInfo;
 import vizsgaremek.dto.commands.EpisodeCommand;
 import vizsgaremek.service.EpisodesService;
 import vizsgaremek.service.SeriesService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,13 +18,13 @@ public class EpisodesController {
     private EpisodesService episodesService;
 
 
-    public EpisodesController(EpisodesService episodesService, SeriesService seriesService) {
+    public EpisodesController(EpisodesService episodesService) {
         this.episodesService = episodesService;
     }
 
     @PostMapping("series/{seriesId}/episodes")
     @ResponseStatus(HttpStatus.CREATED)
-    public EpisodesInfo save(@PathVariable("seriesId") Integer id, @RequestBody EpisodeCommand command) {
+    public EpisodesInfo save(@PathVariable("seriesId") Integer id, @Valid @RequestBody EpisodeCommand command) {
         return episodesService.saveEpisode(id, command);
     }
 
@@ -52,9 +52,12 @@ public class EpisodesController {
         return episodesService.updateOrInsert(id, command);
 
     }
+
+    //ha nagyon véletlen a felhasználónak kéne. bár nem kéne hogy kelljen neki:
+
 //    @PutMapping("Allepisodes/{episodeId}/setSeries")
 //    @ResponseStatus(HttpStatus.OK)
-//    public EpisodesInfo setSeries(@PathVariable("episodeId") Integer episodeId, @RequestBody Integer seriesId) {
+//    public EpisodesInfo setSeries(@PathVariable("episodeId") Integer episodeId,@Valid @RequestBody Integer seriesId) {
 //            return episodesService.setSeries(episodeId,seriesId);
 //        }
 

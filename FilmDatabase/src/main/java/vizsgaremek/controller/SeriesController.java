@@ -4,10 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import vizsgaremek.dto.SeriesInfo;
 import vizsgaremek.dto.SeriesInfoFull;
-import vizsgaremek.dto.archive.dto.DeletedSeriesInfo;
+import vizsgaremek.dto.DeletedSeriesInfo;
 import vizsgaremek.dto.commands.SeriesCommand;
 import vizsgaremek.service.SeriesService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -23,7 +24,7 @@ public class SeriesController {
 
     @PostMapping("series")
     @ResponseStatus(HttpStatus.CREATED)
-    public SeriesInfo save(@RequestBody SeriesCommand command) {
+    public SeriesInfo save(@Valid @RequestBody SeriesCommand command) {
         return seriesService.saveSeries(command);
     }
 
@@ -50,6 +51,7 @@ public class SeriesController {
     public List<DeletedSeriesInfo> archiveList() {
         return seriesService.archiveList();
     }
+
     @DeleteMapping("series/{seriesId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteSeries (@PathVariable("seriesId") Integer id) {

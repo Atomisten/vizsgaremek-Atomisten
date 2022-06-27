@@ -2,7 +2,7 @@ package vizsgaremek.repository;
 
 import org.springframework.stereotype.Repository;
 import vizsgaremek.domain.Episodes;
-import vizsgaremek.dto.archive.DeletedEpisodes;
+import vizsgaremek.domain.archive.DeletedEpisodes;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,17 +14,8 @@ public class EpisodesRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public DeletedEpisodes archive(DeletedEpisodes deletedEpisode) {
-        return entityManager.merge(deletedEpisode);
-    }
 
-    public void flush(){
-        entityManager.flush();
-    }
 
-    public List<DeletedEpisodes> archiveList() {
-        return entityManager.createQuery("SELECT de from DeletedEpisodes de", DeletedEpisodes.class).getResultList();
-    }
 
     public Episodes save(Episodes toSave) {
         entityManager.persist(toSave);
@@ -41,7 +32,7 @@ public class EpisodesRepository {
         return entityManager.merge(toUpdate);
     }
 
-    public Episodes findByID(Integer id) {
+    public Episodes findById(Integer id) {
         return entityManager.createQuery("SELECT e FROM Episodes e WHERE e.id = :value", Episodes.class)
                 .setParameter("value", id)
                 .getSingleResult();
@@ -58,22 +49,5 @@ public class EpisodesRepository {
                 .getResultList();
     }
 
-    public DeletedEpisodes archivedFindByID(Integer id) {
-        return entityManager.createQuery("SELECT de FROM DeletedEpisodes de WHERE de.id = :value", DeletedEpisodes.class)
-                .setParameter("value", id)
-                .getSingleResult();
-    }
 
-    public void deleteArchiveEpisode(DeletedEpisodes archivedToDelete ) {
-        entityManager.remove(archivedToDelete);
-    }
-
-    public void purge() {
-        entityManager.createQuery("DELETE FROM DeletedEpisodes de").executeUpdate();
-    }
-
-    public DeletedEpisodes archiveP(DeletedEpisodes deletedEpisodeToSave) {
-        entityManager.persist(deletedEpisodeToSave);
-        return deletedEpisodeToSave;
-    }
 }

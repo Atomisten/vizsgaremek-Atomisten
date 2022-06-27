@@ -1,7 +1,6 @@
 package vizsgaremek.domain;
 
 import lombok.*;
-import vizsgaremek.dto.archive.DeletedSeries;
 
 import javax.persistence.*;
 
@@ -26,7 +25,7 @@ public class Episodes {
     @Column(name = "director")
     private String director;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "series_id")
     private Series series;
 

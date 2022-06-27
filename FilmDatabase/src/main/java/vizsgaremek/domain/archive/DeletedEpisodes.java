@@ -1,8 +1,7 @@
-package vizsgaremek.dto.archive;
+package vizsgaremek.domain.archive;
 
 import lombok.*;
 import org.hibernate.Hibernate;
-import vizsgaremek.domain.Series;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -26,7 +25,7 @@ public class DeletedEpisodes {
     private Integer episodeId;
 
     @Column(name = "time_of_delete")
-    private LocalDateTime localDateTime;
+    private LocalDateTime timeOfDeletion;
 
     @Column(name = "title")
     private String title;

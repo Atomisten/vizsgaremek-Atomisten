@@ -1,4 +1,4 @@
-package vizsgaremek.dto.archive;
+package vizsgaremek.domain.archive;
 
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -27,7 +27,7 @@ public class DeletedSeries {
     private Integer seriesId;
 
     @Column(name = "time_of_delete")
-    private LocalDateTime localDateTime;
+    private LocalDateTime timeOfDeletion;
 
     @Column(name = "title")
     private String title;

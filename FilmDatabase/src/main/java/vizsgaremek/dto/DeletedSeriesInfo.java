@@ -1,4 +1,4 @@
-package vizsgaremek.dto.archive.dto;
+package vizsgaremek.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

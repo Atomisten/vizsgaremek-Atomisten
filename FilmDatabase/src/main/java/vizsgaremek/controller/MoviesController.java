@@ -3,11 +3,11 @@ package vizsgaremek.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import vizsgaremek.dto.MoviesInfo;
-import vizsgaremek.dto.MoviesInfoWithoutId;
-import vizsgaremek.dto.archive.DeletedMovies;
+import vizsgaremek.domain.archive.DeletedMovies;
 import vizsgaremek.dto.commands.MovieCommand;
 import vizsgaremek.service.MoviesService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,7 +22,7 @@ public class MoviesController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MoviesInfo save(@RequestBody MovieCommand command) {
+    public MoviesInfo save(@Valid @RequestBody MovieCommand command) {
         return moviesService.saveMovie(command);
     }
 

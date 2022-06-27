@@ -1,4 +1,4 @@
-package vizsgaremek.dto.archive.dto;
+package vizsgaremek.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +15,7 @@ public class DeletedEpisodesInfo {
     private Integer episodeId;
     private String title;
     private String director;
-    private LocalDateTime localDateTime;
+    private LocalDateTime timeOfDeletion;
     private String seriesTitle;
     private Integer seriesId;
 }

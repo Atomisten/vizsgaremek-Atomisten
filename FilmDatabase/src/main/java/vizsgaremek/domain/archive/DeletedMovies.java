@@ -1,4 +1,4 @@
-package vizsgaremek.dto.archive;
+package vizsgaremek.domain.archive;
 
 import lombok.*;
 import org.hibernate.Hibernate;
