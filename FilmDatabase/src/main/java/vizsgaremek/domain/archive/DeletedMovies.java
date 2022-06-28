@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
@@ -19,16 +20,21 @@ public class DeletedMovies {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "deleted_movie_id")
     private Integer id;
-//    @Column(name = "date_time")
-//    private LocalDateTime localDateTime;                                                        //TODO törlés dátum
+
     @Column(name = "movie_id")
     private Integer movieId;
+
+    @Column(name = "time_of_delete")
+    private LocalDateTime timeOfDeletion;
 
     @Column(name = "title")
     private String title;
 
     @Column(name = "author")
     private String author;
+
+    @Column(name ="cost_to_rent")
+    private int costToRent;
 
     @Override
     public boolean equals(Object o) {

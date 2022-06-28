@@ -1,3 +1,16 @@
+
+#FILMES ADATBÁZIS
+*menthetünk filmeket és sorozatokat, ezeket ha töröljük akkor archiválva lesznek, így könnyen újra elérhetőek lesznek ha 
+meg akarjuk őket később nézni. akár egyéni felhasználók is használhatják mint filmes adatbázis amit láttak, vagy 
+szeretnék kibérelni, de akár weboldalak is mint pl imdb vagy netflix. sok funkció nincs benne az egyszerűség kedvéért.
+
+
+
+
+
+
+
+
 # Vizsgaremek
 
 A feladatod egy backend API projekt elkészítése, általad választott témában.  

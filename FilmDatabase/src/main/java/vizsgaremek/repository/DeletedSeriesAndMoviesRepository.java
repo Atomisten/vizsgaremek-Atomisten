@@ -55,7 +55,7 @@ public class DeletedSeriesAndMoviesRepository {
         entityManager.remove(deletedSeries);
     }
 
-    public void deleteArchiveEpisode(DeletedEpisodes archivedToDelete ) {
+    public void deleteArchiveEpisode(DeletedEpisodes archivedToDelete) {
         entityManager.remove(archivedToDelete);
     }
 

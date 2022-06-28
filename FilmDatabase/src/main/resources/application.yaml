@@ -10,3 +10,5 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
     show-sql: on
+
+"cost_to_rent": 700

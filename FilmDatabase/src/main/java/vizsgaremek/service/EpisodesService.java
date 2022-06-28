@@ -5,10 +5,10 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import vizsgaremek.domain.Episodes;
 import vizsgaremek.domain.Series;
-import vizsgaremek.dto.EpisodesInfo;
 import vizsgaremek.domain.archive.DeletedEpisodes;
 import vizsgaremek.domain.archive.DeletedSeries;
 import vizsgaremek.dto.DeletedEpisodesInfo;
+import vizsgaremek.dto.EpisodesInfo;
 import vizsgaremek.dto.commands.EpisodeCommand;
 import vizsgaremek.exceptionhandling.DeletedEpisodeNotFoundException;
 import vizsgaremek.exceptionhandling.EpisodeNotFoundException;
@@ -60,12 +60,12 @@ public class EpisodesService {
 
 
     public EpisodesInfo updateOrInsert(Integer id, EpisodeCommand command) {
-            Episodes foundById = episodesRepositoryExceptionHandler(id);
-            Episodes episodeToUpdate = modelMapper.map(command, Episodes.class);
-            episodeToUpdate.setId(id);
-            episodeToUpdate.setSeries(foundById.getSeries());
-            Episodes updatedEpisode = episodesRepository.updateOrInsert(episodeToUpdate);
-            return modelMapper.map(updatedEpisode, EpisodesInfo.class);
+        Episodes foundById = episodesRepositoryExceptionHandler(id);
+        Episodes episodeToUpdate = modelMapper.map(command, Episodes.class);
+        episodeToUpdate.setId(id);
+        episodeToUpdate.setSeries(foundById.getSeries());
+        Episodes updatedEpisode = episodesRepository.updateOrInsert(episodeToUpdate);
+        return modelMapper.map(updatedEpisode, EpisodesInfo.class);
     }
 
     public List<DeletedEpisodesInfo> archiveList() {

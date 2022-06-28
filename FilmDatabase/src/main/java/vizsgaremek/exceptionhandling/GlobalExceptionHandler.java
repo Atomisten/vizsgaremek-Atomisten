@@ -14,18 +14,18 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-//    @ExceptionHandler(MovieNotFoundException.class)
+    //    @ExceptionHandler(MovieNotFoundException.class)
 //    @ResponseStatus(value =HttpStatus.NOT_FOUND)
 //    public void handleMovieNotFound() {
 //        log.info("Movie not found with id");;
 //    }
-@ExceptionHandler(MethodArgumentNotValidException.class)
-public ResponseEntity<List<ValidationError>> handleValidationException(MethodArgumentNotValidException exception) {
-    List<ValidationError> validationErrors = exception.getBindingResult().getFieldErrors().stream()
-            .map(fieldError -> new ValidationError(fieldError.getField(), fieldError.getDefaultMessage()))
-            .collect(Collectors.toList());
-    return new ResponseEntity<>(validationErrors, HttpStatus.BAD_REQUEST);
-}
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<List<ValidationError>> handleValidationException(MethodArgumentNotValidException exception) {
+        List<ValidationError> validationErrors = exception.getBindingResult().getFieldErrors().stream()
+                .map(fieldError -> new ValidationError(fieldError.getField(), fieldError.getDefaultMessage()))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(validationErrors, HttpStatus.BAD_REQUEST);
+    }
 
 
     @ExceptionHandler(MovieNotFoundException.class)
@@ -34,6 +34,7 @@ public ResponseEntity<List<ValidationError>> handleValidationException(MethodArg
                 "Movie with id " + exception.getIdNotFound() + " is not found.");
         return new ResponseEntity<>(List.of(validationError), HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(EpisodeNotFoundException.class)
     public ResponseEntity<List<ValidationError>> handleEpisodeNotFound(EpisodeNotFoundException exception) {
         ValidationError validationError = new ValidationError("episode_id",

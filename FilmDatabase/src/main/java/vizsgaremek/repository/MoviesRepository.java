@@ -14,9 +14,9 @@ public class MoviesRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
+
     public DeletedMovies archive(DeletedMovies deletedMovie) {
-        entityManager.persist(deletedMovie);
-        return deletedMovie;
+        return entityManager.merge(deletedMovie);
     }
 
     public List<DeletedMovies> archiveList() {
@@ -38,27 +38,15 @@ public class MoviesRepository {
         return entityManager.merge(toUpdate);
     }
 
-    public Movies findByID(Integer id) {
+    public Movies findById(Integer id) {
         return entityManager.createQuery("SELECT m FROM Movies m WHERE m.id = :value", Movies.class)
                 .setParameter("value", id)
                 .getSingleResult();
     }
 
-//    public Movies findByID(Integer id) {
-//        return entityManager.find(Movies.class, id);
-//    }
 
     public void delete(Movies movieToDelete) {
         entityManager.remove(movieToDelete);
     }
 
-//    public void delete (Optional<Movies> movieToDelete) {
-//        entityManager.remove(movieToDelete);
-//    }
-//
-//    public Optional<Movies> findByID(Integer id) {
-//        return Optional.of(entityManager.createQuery("SELECT m FROM Movies m WHERE m.id = :value", Movies.class)
-//                .setParameter("value", id)
-//                .getSingleResult());
-//    }
 }

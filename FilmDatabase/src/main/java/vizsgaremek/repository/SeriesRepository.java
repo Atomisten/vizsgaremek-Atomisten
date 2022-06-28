@@ -2,7 +2,6 @@ package vizsgaremek.repository;
 
 import org.springframework.stereotype.Repository;
 import vizsgaremek.domain.Series;
-import vizsgaremek.domain.archive.DeletedSeries;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -42,11 +41,9 @@ public class SeriesRepository {
     }
 
 
-
     public void delete(Series seriesToDelete) {
         entityManager.remove(seriesToDelete);
     }
-
 
 
 }

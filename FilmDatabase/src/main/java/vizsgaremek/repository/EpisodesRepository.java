@@ -2,7 +2,6 @@ package vizsgaremek.repository;
 
 import org.springframework.stereotype.Repository;
 import vizsgaremek.domain.Episodes;
-import vizsgaremek.domain.archive.DeletedEpisodes;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -13,8 +12,6 @@ public class EpisodesRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
-
-
 
 
     public Episodes save(Episodes toSave) {
@@ -44,7 +41,7 @@ public class EpisodesRepository {
 
     public List<Episodes> listAllEpisodesForService(Integer id) {
         return entityManager.createQuery("SELECT e FROM Episodes e " +
-                "WHERE e.series.id = :value ", Episodes.class)
+                        "WHERE e.series.id = :value ", Episodes.class)
                 .setParameter("value", id)
                 .getResultList();
     }

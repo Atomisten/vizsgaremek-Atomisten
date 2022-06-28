@@ -11,7 +11,8 @@ INSERT INTO episodes (title, director, series_id) values ('Johan Renck', 'Not Gr
 INSERT INTO episodes (title, director, series_id) values ('Johan Renck', 'Please Remain Calm', 2);
 
 
--- David Benioff D.B. Weiss
+
+
 
 
 CREATE TABLE deleted_episodes (deleted_episode_id INTEGER NOT NULL auto_increment, director VARCHAR(255),
