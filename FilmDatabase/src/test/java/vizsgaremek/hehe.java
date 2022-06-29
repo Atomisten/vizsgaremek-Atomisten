@@ -8,7 +8,7 @@ class hehe {
 
 
     @Test
-    void szar() {
+    void haha() {
 
     }
 }

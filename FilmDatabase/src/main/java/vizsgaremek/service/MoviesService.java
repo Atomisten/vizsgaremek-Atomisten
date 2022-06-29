@@ -98,12 +98,4 @@ public class MoviesService {
         }
     }
 
-    public Movies moviesRepositoryUpdateOrInsertCost(Integer id) {
-        try {
-            return moviesRepository.findById(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new MovieNotFoundException(id);
-        }
-    }
-
 }
