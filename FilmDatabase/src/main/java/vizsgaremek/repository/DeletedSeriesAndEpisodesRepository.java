@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @Repository
-public class DeletedSeriesAndMoviesRepository {
+public class DeletedSeriesAndEpisodesRepository {
 
 
     @PersistenceContext

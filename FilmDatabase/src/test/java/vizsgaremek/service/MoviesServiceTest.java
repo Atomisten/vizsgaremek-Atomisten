@@ -96,11 +96,4 @@ public class MoviesServiceTest {
         assertThat(moviesService.listAllMovies().size()).isEqualTo(2);
     }
 
-//    @Test
-//    void updateOrInsert_oneMovie_success() {
-//        when(moviesRepository.updateOrInsert(movies)).thenReturn(movies2);
-//        MoviesInfo moviesInfo = moviesService.updateOrInsert(1, movieCommand2);
-//        assertThat(moviesInfo.getTitle()).isEqualTo(moviesInfo2.getTitle());
-//    }
-
 }

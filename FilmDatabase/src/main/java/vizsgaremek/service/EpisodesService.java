@@ -12,7 +12,7 @@ import vizsgaremek.dto.EpisodesInfo;
 import vizsgaremek.dto.commands.EpisodeCommand;
 import vizsgaremek.exceptionhandling.DeletedEpisodeNotFoundException;
 import vizsgaremek.exceptionhandling.EpisodeNotFoundException;
-import vizsgaremek.repository.DeletedSeriesAndMoviesRepository;
+import vizsgaremek.repository.DeletedSeriesAndEpisodesRepository;
 import vizsgaremek.repository.EpisodesRepository;
 
 import javax.transaction.Transactional;
@@ -27,13 +27,13 @@ public class EpisodesService {
     private EpisodesRepository episodesRepository;
     private ModelMapper modelMapper;
     private SeriesService seriesService;
-    private DeletedSeriesAndMoviesRepository deletedSeriesAndMoviesRepository;
+    private DeletedSeriesAndEpisodesRepository deletedSeriesAndEpisodesRepository;
 
-    public EpisodesService(EpisodesRepository episodesRepository, ModelMapper modelMapper, SeriesService seriesService, DeletedSeriesAndMoviesRepository deletedSeriesAndMoviesRepository) {
+    public EpisodesService(EpisodesRepository episodesRepository, ModelMapper modelMapper, SeriesService seriesService, DeletedSeriesAndEpisodesRepository deletedSeriesAndEpisodesRepository) {
         this.episodesRepository = episodesRepository;
         this.modelMapper = modelMapper;
         this.seriesService = seriesService;
-        this.deletedSeriesAndMoviesRepository = deletedSeriesAndMoviesRepository;
+        this.deletedSeriesAndEpisodesRepository = deletedSeriesAndEpisodesRepository;
     }
 
     public EpisodesInfo saveEpisode(Integer id, EpisodeCommand episodeCommand) {
@@ -69,7 +69,7 @@ public class EpisodesService {
     }
 
     public List<DeletedEpisodesInfo> archiveList() {
-        return deletedSeriesAndMoviesRepository.deletedEpisodeList().stream()
+        return deletedSeriesAndEpisodesRepository.deletedEpisodeList().stream()
                 .map(deletedEpisodes -> {
                     DeletedEpisodesInfo deletedEpisodesInfo = modelMapper.map(deletedEpisodes, DeletedEpisodesInfo.class);
                     deletedEpisodesInfo.setEpisodeId(deletedEpisodes.getEpisodeId());
@@ -94,7 +94,7 @@ public class EpisodesService {
         episodeToArchive.setEpisodeId(id);
         episodeToArchive.setTimeOfDeletion(LocalDateTime.now());
         episodeToArchive.setDeletedSeries(deletedSeries);
-        return deletedSeriesAndMoviesRepository.archiveEpisode(episodeToArchive);
+        return deletedSeriesAndEpisodesRepository.archiveEpisode(episodeToArchive);
     }
 
 
@@ -133,19 +133,19 @@ public class EpisodesService {
 
     public void deleteArchivedEpisodeById(Integer id) {
         DeletedEpisodes deletedEpisode = deletedEpisodesRepositoryExceptionHandler(id);
-        deletedSeriesAndMoviesRepository.deleteArchiveEpisode(deletedEpisode);
+        deletedSeriesAndEpisodesRepository.deleteArchiveEpisode(deletedEpisode);
     }
 
 
     public DeletedEpisodes deletedEpisodesRepositoryExceptionHandler(Integer id) {
         try {
-            return deletedSeriesAndMoviesRepository.archivedEpisodeFindById(id);
+            return deletedSeriesAndEpisodesRepository.archivedEpisodeFindById(id);
         } catch (EmptyResultDataAccessException e) {
             throw new DeletedEpisodeNotFoundException(id);
         }
     }
 
     public void purge() {
-        deletedSeriesAndMoviesRepository.purgeEpisodes();
+        deletedSeriesAndEpisodesRepository.purgeEpisodes();
     }
 }
