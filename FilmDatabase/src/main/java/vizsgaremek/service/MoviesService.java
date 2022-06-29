@@ -80,7 +80,7 @@ public class MoviesService {
         moviesRepository.delete(movieFound);
     }
 
-    private DeletedMovies archive(Integer id) {
+    public DeletedMovies archive(Integer id) {
         Movies movieFound = moviesRepository.findById(id);
         DeletedMovies movieToArchive = modelMapper.map(movieFound, DeletedMovies.class);
         movieToArchive.setTimeOfDeletion(LocalDateTime.now());

@@ -28,6 +28,6 @@ public class SeriesServiceTest {
 
     @BeforeEach
     void init() {
-        System.out.println("lol");
+        System.out.println("...");
     }
 }

@@ -28,6 +28,6 @@ public class EpisodesServiceTest {
 
     @BeforeEach
     void init() {
-        System.out.println("lol");
+        System.out.println("...");
     }
 }
