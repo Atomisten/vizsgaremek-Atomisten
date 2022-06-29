@@ -1,4 +1,4 @@
-package vizsgaremek;
+package vizsgaremek.controller;
 
 import org.junit.jupiter.api.Test;
 

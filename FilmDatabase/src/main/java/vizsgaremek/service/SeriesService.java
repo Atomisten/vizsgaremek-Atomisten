@@ -99,68 +99,79 @@ public class SeriesService {
         seriesRepository.delete(seriesFound);
     }
 
+
     private DeletedSeries archive(Integer seriesId) {
-        Series seriesById = seriesRepository.findById(seriesId);
-        DeletedSeries deletedSeries = modelMapper.map(seriesById, DeletedSeries.class);
-        deletedSeries.setSeriesId(seriesId);
-        deletedSeries.setTimeOfDeletion(LocalDateTime.now());
-        DeletedSeries archivedWithoutEpisodes = deletedSeriesAndMoviesRepository.archiveSeries(deletedSeries);
-        List<Episodes> episodesList1 = seriesById.getEpisodesList();
-        List<DeletedEpisodes> deletedEpisodesList1 = episodesList1.stream()
-                .map(episodes -> {
-                    DeletedEpisodes deletedEpisodes = modelMapper.map(episodes, DeletedEpisodes.class);
-                    deletedEpisodes.setEpisodeId(episodes.getId());
-                    deletedEpisodes.setTimeOfDeletion(LocalDateTime.now());
-                    deletedEpisodes.setDeletedSeries(archivedWithoutEpisodes);
-                    return deletedSeriesAndMoviesRepository.archiveEpisode(deletedEpisodes);
-                })
-                .collect(Collectors.toList());
-        archivedWithoutEpisodes.setDeletedEpisodesList(deletedEpisodesList1);
-        return archivedWithoutEpisodes;
+        DeletedSeries archivedWithoutEpisodes = getOrCreateSeries(seriesId);
+        Series seriesFound = findById(seriesId);
+        List<Episodes> episodesList1 = seriesFound.getEpisodesList();
+            List<DeletedEpisodes> deletedEpisodesList1 = episodesList1.stream()
+                    .map(episodes -> {
+                        DeletedEpisodes deletedEpisodes = modelMapper.map(episodes, DeletedEpisodes.class);
+                        deletedEpisodes.setEpisodeId(episodes.getId());
+                        deletedEpisodes.setId(null);
+                        deletedEpisodes.setTimeOfDeletion(LocalDateTime.now());
+                        deletedEpisodes.setDeletedSeries(archivedWithoutEpisodes);
+                        return deletedSeriesAndMoviesRepository.archiveEpisode(deletedEpisodes);
+                    })
+                    .collect(Collectors.toList());
+            return archivedWithoutEpisodes;
+        }
 
-
-    }
-
-
-    public DeletedSeries archiveSeriesByEpisode(Integer id) {
-        try {
-            DeletedSeries deletedSeriesFound = deletedSeriesAndMoviesRepository.archivedSeriesFindById(id);
+    private DeletedSeries getOrCreateSeries(Integer seriesId) {
+        try {                                                                                                       //ha van DELETED series akkor visszaadja,
+            DeletedSeries deletedSeriesFound = deletedSeriesAndMoviesRepository.archivedSeriesFindById(seriesId);
             return deletedSeriesAndMoviesRepository.archiveSeries(deletedSeriesFound);
-        } catch (EmptyResultDataAccessException e) {
-            Series seriesFound = seriesRepository.findById(id);
-            DeletedSeries seriesToArchive = modelMapper.map(seriesFound, DeletedSeries.class);
-            seriesToArchive.setSeriesId(id);
-            seriesToArchive.setTimeOfDeletion(LocalDateTime.now());
-            return deletedSeriesAndMoviesRepository.archiveSeries(seriesToArchive);
+        } catch (EmptyResultDataAccessException e) {                                                            //ha nincs DELETED SERIES akkor létrehozza az epizódokkal együtt
+            Series seriesFound = seriesRepository.findById(seriesId);
+            DeletedSeries deletedSeries = modelMapper.map(seriesFound, DeletedSeries.class);
+            deletedSeries.setSeriesId(seriesId);
+            deletedSeries.setId(null);
+            deletedSeries.setTimeOfDeletion(LocalDateTime.now());
+           return deletedSeriesAndMoviesRepository.archiveSeries(deletedSeries);
         }
     }
 
-    public List<DeletedSeriesInfo> archiveList() {
-        return deletedSeriesAndMoviesRepository.deletedSeriesList().stream()
-                .map(deletedSeries -> {
-                    DeletedSeriesInfo deletedSeriesInfo = modelMapper.map(deletedSeries, DeletedSeriesInfo.class);
-                    deletedSeriesInfo.setNumberOfEpisodes(deletedSeries.getDeletedEpisodesList().size());
-                    return deletedSeriesInfo;
-                })
-                .collect(Collectors.toList());
-    }
 
-    public void deleteArchivedSeries(Integer deletedSeriesId) {
-        DeletedSeries deletedSeries = deletedSeriesRepositoryExceptionHandler(deletedSeriesId);
-        deletedSeriesAndMoviesRepository.deleteAllEpisodesFromArchivedSeries(deletedSeriesId);
-        deletedSeriesAndMoviesRepository.deleteArchivedSeries(deletedSeries);
-    }
 
-    public DeletedSeries deletedSeriesRepositoryExceptionHandler(Integer id) {
-        try {
-            return deletedSeriesAndMoviesRepository.archivedSeriesFindById(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new DeletedSeriesNotFoundException(id);
+        public DeletedSeries archiveSeriesByEpisode (Integer id){
+            try {
+                DeletedSeries deletedSeriesFound = deletedSeriesAndMoviesRepository.archivedSeriesFindById(id);
+                return deletedSeriesAndMoviesRepository.archiveSeries(deletedSeriesFound);
+            } catch (EmptyResultDataAccessException e) {
+                Series seriesFound = seriesRepository.findById(id);
+                DeletedSeries seriesToArchive = modelMapper.map(seriesFound, DeletedSeries.class);
+                seriesToArchive.setSeriesId(id);
+                seriesToArchive.setTimeOfDeletion(LocalDateTime.now());
+                return deletedSeriesAndMoviesRepository.archiveSeries(seriesToArchive);
+            }
+        }
+
+        public List<DeletedSeriesInfo> archiveList () {
+            return deletedSeriesAndMoviesRepository.deletedSeriesList().stream()
+                    .map(deletedSeries -> {
+                        DeletedSeriesInfo deletedSeriesInfo = modelMapper.map(deletedSeries, DeletedSeriesInfo.class);
+                        deletedSeriesInfo.setNumberOfEpisodes(deletedSeries.getDeletedEpisodesList().size());
+                        return deletedSeriesInfo;
+                    })
+                    .collect(Collectors.toList());
+        }
+
+        public void deleteArchivedSeries (Integer deletedSeriesId){
+            DeletedSeries deletedSeries = deletedSeriesRepositoryExceptionHandler(deletedSeriesId);
+            deletedSeriesAndMoviesRepository.deleteAllEpisodesFromArchivedSeries(deletedSeriesId);
+            deletedSeriesAndMoviesRepository.deleteArchivedSeries(deletedSeries);
+        }
+
+        public DeletedSeries deletedSeriesRepositoryExceptionHandler (Integer id){
+            try {
+                return deletedSeriesAndMoviesRepository.archivedSeriesFindById(id);
+            } catch (EmptyResultDataAccessException e) {
+                throw new DeletedSeriesNotFoundException(id);
+            }
+        }
+
+        public void purgeAll () {
+            deletedSeriesAndMoviesRepository.purgeEpisodes();
+            deletedSeriesAndMoviesRepository.purgeSeries();
         }
     }
-
-    public void purgeAll() {
-        deletedSeriesAndMoviesRepository.purgeEpisodes();
-        deletedSeriesAndMoviesRepository.purgeSeries();
-    }
-}

@@ -23,13 +23,13 @@ public class MoviesService {
 
     private MoviesRepository moviesRepository;
     private ModelMapper modelMapper;
-    private final int costToRent;
 
-    public MoviesService(MoviesRepository moviesRepository, ModelMapper modelMapper,
-                         @Value("${cost_to_rent}") int costToRent) {
+    @Value("${cost_to_rent}")
+    private int costToRent;
+
+    public MoviesService(MoviesRepository moviesRepository, ModelMapper modelMapper) {
         this.moviesRepository = moviesRepository;
         this.modelMapper = modelMapper;
-        this.costToRent = costToRent;
     }
 
     public MoviesInfo saveMovie(MovieCommand movieCommand) {
