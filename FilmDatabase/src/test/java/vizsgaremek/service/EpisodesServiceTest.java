@@ -63,7 +63,7 @@ public class EpisodesServiceTest {
         episodeCommand2 = new EpisodeCommand("episodeTitle2", "episodeDirector2");
         episodesInfo = new EpisodesInfo(1, "episodeTitle", "episodeDirector", "seriesTitle");
         episodesInfo2 = new EpisodesInfo(1, "episodeTitle2", "episodeDirector2", "seriesTitle");
-        episodes = new Episodes(1, "episodeTitle", "episodeDirector", null );
+        episodes = new Episodes(1, "episodeTitle", "episodeDirector", null);
         episodes2 = new Episodes(2, "episodeTitle2", "episodeDirector2", null);
         System.out.println("...");
         Series series = new Series(1, "seriesTitle", "seriesAuthor",
@@ -71,13 +71,13 @@ public class EpisodesServiceTest {
         episodes.setSeries(series);
         episodes2.setSeries(series);
 
-        episodesService = new EpisodesService(episodesRepository,modelMapper, seriesService, deletedSeriesAndEpisodesRepository);
+        episodesService = new EpisodesService(episodesRepository, modelMapper, seriesService, deletedSeriesAndEpisodesRepository);
     }
 
     @Test
     void testSaveEpisodes_oneEpisodes_success() throws Exception {
         when(episodesRepository.save(any())).thenReturn(episodes);
-        assertThat(episodesService.saveEpisode(1,episodeCommand))
+        assertThat(episodesService.saveEpisode(1, episodeCommand))
                 .extracting(EpisodesInfo::getTitle)
                 .isEqualTo(episodesInfo.getTitle());
     }

@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import vizsgaremek.dto.DeletedMoviesInfo;
 import vizsgaremek.dto.MoviesInfo;
 import vizsgaremek.dto.commands.MovieCommand;
 

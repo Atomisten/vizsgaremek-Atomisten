@@ -27,7 +27,7 @@ public class Movies {
     @Column(name = "author")
     private String author;
 
-    @Column(name ="cost_to_rent")
+    @Column(name = "cost_to_rent")
     @Value("${cost_to_rent}")
     private int costToRent;
 

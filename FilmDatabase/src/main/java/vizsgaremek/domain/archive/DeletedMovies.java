@@ -33,7 +33,7 @@ public class DeletedMovies {
     @Column(name = "author")
     private String author;
 
-    @Column(name ="cost_to_rent")
+    @Column(name = "cost_to_rent")
     private int costToRent;
 
     @Override
