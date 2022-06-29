@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class DeletedMoviesInfo {
 
     private Integer id;
+    private Integer movieId;
     private String title;
     private String author;
     private int costToRent;

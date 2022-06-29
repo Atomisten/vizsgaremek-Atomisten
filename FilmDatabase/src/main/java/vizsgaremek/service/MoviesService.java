@@ -56,6 +56,13 @@ public class MoviesService {
     public MoviesInfo updateOrInsert(Integer id, MovieCommand command) {
         Movies movieToUpdate = modelMapper.map(command, Movies.class);
         movieToUpdate.setId(id);
+        try {
+            Movies movieFound = moviesRepository.findById(id);
+            movieToUpdate.setCostToRent(movieFound.getCostToRent());           //ha megtalálja akkor ne bántsa az árat.
+        } catch (EmptyResultDataAccessException e) {
+            movieToUpdate.setCostToRent(costToRent);                           //ha nem találja akkor beállítja
+        }
+
         Movies movieSaved = moviesRepository.updateOrInsert(movieToUpdate);
         return modelMapper.map(movieSaved, MoviesInfo.class);
     }
@@ -78,6 +85,7 @@ public class MoviesService {
         DeletedMovies movieToArchive = modelMapper.map(movieFound, DeletedMovies.class);
         movieToArchive.setTimeOfDeletion(LocalDateTime.now());
         movieToArchive.setMovieId(id);
+        movieToArchive.setId(null);
         return moviesRepository.archive(movieToArchive);
     }
 
@@ -89,4 +97,13 @@ public class MoviesService {
             throw new MovieNotFoundException(id);
         }
     }
+
+    public Movies moviesRepositoryUpdateOrInsertCost(Integer id) {
+        try {
+            return moviesRepository.findById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new MovieNotFoundException(id);
+        }
+    }
+
 }

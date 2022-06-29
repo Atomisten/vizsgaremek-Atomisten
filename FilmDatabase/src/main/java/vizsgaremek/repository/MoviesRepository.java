@@ -16,7 +16,8 @@ public class MoviesRepository {
 
 
     public DeletedMovies archive(DeletedMovies deletedMovie) {
-        return entityManager.merge(deletedMovie);
+         entityManager.persist(deletedMovie);
+         return deletedMovie;
     }
 
     public List<DeletedMovies> archiveList() {
