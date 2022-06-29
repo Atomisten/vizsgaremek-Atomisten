@@ -1,13 +1,12 @@
 package vizsgaremek.controller;
 
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import vizsgaremek.dto.MoviesInfo;
-import vizsgaremek.service.MoviesService;
+import vizsgaremek.dto.EpisodesInfo;
+import vizsgaremek.service.EpisodesService;
 
 import java.util.List;
 
@@ -17,24 +16,26 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = MoviesController.class)
-public class MoviesControllerWebMvcIT {
+@WebMvcTest(controllers = EpisodesController.class)
+public class EpisodesControllerWebMvcIT {
 
     @MockBean
-    MoviesService moviesService;
+    EpisodesService episodesService;
 
     @Autowired
     MockMvc mockMvc;
 
     @Test
-    void testFindAll_twoMovies_success() throws Exception {
-        when(moviesService.listAllMovies())
+    void testFindAll_twoEpisodes_success() throws Exception {
+        when(episodesService.listAllEpisodes())
                 .thenReturn(List.of(
-                        new MoviesInfo(1, "tesztTitle", "tesztAuthor", 600),
-                        new MoviesInfo(2, "2ndtesztTitle", "2ndtesztAuthor", 600)
+                        new EpisodesInfo(1, "tesztTitle", "tesztAuthor", "Game of Thrones"),
+                        new EpisodesInfo(2, "2ndtesztTitle", "2ndtesztAuthor", "Game of Thrones")
                 ));
-        mockMvc.perform(get("/api/movies"))
+        mockMvc.perform(get("/api/series/Allepisodes"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[1].title", equalTo("2ndtesztTitle")));
     }
+
+
 }

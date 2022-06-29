@@ -9,7 +9,6 @@ import vizsgaremek.controller.MoviesController;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-
 public class MoviesControllerIT {
 
     @Autowired
