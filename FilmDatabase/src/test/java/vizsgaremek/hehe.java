@@ -9,6 +9,5 @@ class hehe {
 
     @Test
     void haha() {
-
     }
 }

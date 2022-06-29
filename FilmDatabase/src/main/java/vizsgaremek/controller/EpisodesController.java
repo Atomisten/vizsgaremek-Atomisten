@@ -16,7 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/")
+@RequestMapping("/api/")
 @Tag(name = "EPISODES controller")
 public class EpisodesController {
 

@@ -28,6 +28,7 @@ public class Movies {
     private String author;
 
     @Column(name ="cost_to_rent")
+    @Value("${cost_to_rent}")
     private int costToRent;
 
 

@@ -27,6 +27,5 @@ public class Series {
     private String author;
 
     @OneToMany(mappedBy = "series")
-    @ToString.Exclude
     private List<Episodes> episodesList;
 }

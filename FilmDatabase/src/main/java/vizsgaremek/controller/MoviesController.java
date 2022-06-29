@@ -18,7 +18,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/movies")
+@RequestMapping("/api/movies")
 @Tag(name = "MOVIES controller")
 public class MoviesController {
 
