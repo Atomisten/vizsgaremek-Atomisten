@@ -45,7 +45,7 @@ public class EpisodesController {
         return episodesService.listAllEpisodes();
     }
 
-    @GetMapping("series/{seriesId}/episodes/")
+    @GetMapping("series/{seriesId}/episodes")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "List all episodes for a SERIES by id")
     public List<EpisodesInfo> findAllEpisodesForSeries(@PathVariable("seriesId") Integer id) {

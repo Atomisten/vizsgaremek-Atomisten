@@ -4,7 +4,6 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
@@ -12,16 +11,12 @@ import vizsgaremek.dto.EpisodesInfo;
 import vizsgaremek.dto.SeriesInfo;
 import vizsgaremek.dto.commands.EpisodeCommand;
 import vizsgaremek.dto.commands.SeriesCommand;
-import vizsgaremek.service.EpisodesService;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -75,8 +70,6 @@ public class EpisodesControllerRestTemplateIT {
     }
 
 
-
-
     @Test
     @Order(1)
     void testSave_OneEpisode_Success() throws Exception {
@@ -85,8 +78,12 @@ public class EpisodesControllerRestTemplateIT {
         assertThat(episodesInfo)
                 .extracting(EpisodesInfo::getTitle)
                 .isEqualTo(initEpisodesInfo1.getTitle());
+//        mockMvc.perform(post("/api/series/1/episodes"), initEpisodeCommand1, EpisodesInfo.class )
+//                .andExpect(status().isCreated());
     }
+
     @Test
+    @Order(2)
     void testFindAll_twoEpisodes_success() throws Exception {
         mockMvc.perform(get("/api/series/Allepisodes"))
                 .andExpect(status().isOk())
@@ -95,7 +92,7 @@ public class EpisodesControllerRestTemplateIT {
 
 
     @Test
-    @Order(2)
+    @Order(3)
     void testFindById_OneEpisode_Success() throws Exception {
         mockMvc.perform(get("/api/series/Allepisodes/5"))
                 .andExpect(jsonPath("$.id", equalTo(5)))
@@ -104,7 +101,16 @@ public class EpisodesControllerRestTemplateIT {
     }
 
     @Test
-    @Order(3)
+    @Order(4)
+    void testFindAllEpisodesForSeries_Success() throws Exception {
+        mockMvc.perform(get("/api/series/1/episodes"))
+                .andExpect(jsonPath("$[2].id", equalTo(5)))
+                .andExpect(jsonPath("$[2].title", equalTo("tesztTitle")))
+                .andExpect(jsonPath("$[2].director", equalTo("Testopher Nolan")));
+    }
+
+    @Test
+    @Order(5)
     void testFindById_OneEpisode_Fail() throws Exception {
         mockMvc.perform(get("/api/series/Allepisodes/11"))
                 .andDo(print())
@@ -114,7 +120,7 @@ public class EpisodesControllerRestTemplateIT {
     }
 
     @Test
-    @Order(4)
+    @Order(6)
     void testPutById_OneEpisode_success() throws Exception {
         restTemplate.put("/api/series/Allepisodes/5", initEpisodeCommand2, EpisodesInfo.class);
         mockMvc.perform(get("/api/series/Allepisodes/5"))
@@ -123,7 +129,7 @@ public class EpisodesControllerRestTemplateIT {
 
 
     @Test
-    @Order(5)
+    @Order(7)
     void testDeleteById_OneEpisode_success() throws Exception {
         mockMvc.perform(delete("/api/series/Allepisodes/5"))
                 .andDo(print())
@@ -132,7 +138,7 @@ public class EpisodesControllerRestTemplateIT {
     }
 
     @Test
-    @Order(6)
+    @Order(8)
     void testDeleteById_OneEpisode_fail() throws Exception {
         mockMvc.perform(delete("/api/series/Allepisodes/5"))
                 .andDo(print())
@@ -140,7 +146,7 @@ public class EpisodesControllerRestTemplateIT {
     }
 
     @Test
-    @Order(7)
+    @Order(9)
     void testGetArchiveList_success() throws Exception {
         mockMvc.perform(get("/api/archive/Alldeletedepisodes"))
                 .andDo(print())

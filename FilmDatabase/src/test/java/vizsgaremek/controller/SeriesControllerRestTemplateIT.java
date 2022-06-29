@@ -2,23 +2,17 @@ package vizsgaremek.controller;
 
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import vizsgaremek.dto.SeriesInfo;
 import vizsgaremek.dto.commands.SeriesCommand;
-import vizsgaremek.service.SeriesService;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -59,8 +53,6 @@ public class SeriesControllerRestTemplateIT {
     }
 
 
-
-
     @Test
     @Order(1)
     void testSave_OneSeries_Success() {
@@ -70,6 +62,7 @@ public class SeriesControllerRestTemplateIT {
                 .extracting(SeriesInfo::getTitle)
                 .isEqualTo(initSeriesInfo1.getTitle());
     }
+
     @Test
     @Order(2)
     void testFindAll_twoSeries_success() throws Exception {
@@ -77,6 +70,7 @@ public class SeriesControllerRestTemplateIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[2].title", equalTo("tesztTitle")));
     }
+
     @Test
     @Order(3)
     void testFindById_OneSeries_Success() throws Exception {
@@ -96,14 +90,20 @@ public class SeriesControllerRestTemplateIT {
                 .andExpect(jsonPath("$[0].errorMessage", is("Series with id 11 is not found.")));
     }
 
-//    @Test
+    //    @Test
 //    @Order(5)
 //    void testPutById_OneSeries_success() throws Exception {
 //        restTemplate.put("/api/series/3", initSeriesCommand2, SeriesInfo.class);
 //        mockMvc.perform(get("/api/series/3"))
 //                .andExpect(jsonPath("$.title", equalTo(initSeriesInfo2.getTitle())));
 //    }
-
+    @Test
+    @Order(5)
+    void testPurge() throws Exception {
+        mockMvc.perform(delete("/api/archive/deletedseries/PURGE"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 
     @Test
     @Order(6)
@@ -125,9 +125,8 @@ public class SeriesControllerRestTemplateIT {
 
     @Test
     @Order(8)
-    void testPurge() throws Exception {
-        mockMvc.perform(delete("/api/archive/deletedseries/PURGE"))
-                .andDo(print())
+    void testArchivedPurge() throws Exception {
+        mockMvc.perform(delete("/api/archive/deletedepisodes/PURGE"))
                 .andExpect(status().isOk());
     }
 
@@ -136,12 +135,5 @@ public class SeriesControllerRestTemplateIT {
     void testArchivedDelete_fail() throws Exception {
         mockMvc.perform(delete("/api/archive/deletedseries/1"))
                 .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @Order(10)
-    void testArchivedPurge() throws Exception {
-        mockMvc.perform(delete("/api/archive/deletedepisodes/PURGE"))
-                .andExpect(status().isOk());
     }
 }

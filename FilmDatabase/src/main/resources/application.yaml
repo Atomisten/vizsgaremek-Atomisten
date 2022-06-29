@@ -1,6 +1,7 @@
 spring:
   datasource:
     url: jdbc:mysql://127.0.0.1:3307/filmdatabase?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true
+#    url: jdbc:mysql://filmdatabasedb/filmdatabase?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true
     username: root
     password: 1234
   jpa:
