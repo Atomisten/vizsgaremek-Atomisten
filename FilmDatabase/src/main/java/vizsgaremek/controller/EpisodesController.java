@@ -1,6 +1,7 @@
 package vizsgaremek.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ public class EpisodesController {
     @PostMapping("series/{seriesId}/episodes")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Save an Episode")
+    @ApiResponse(responseCode = "201", description = "Episode saved")
     public EpisodesInfo save(@PathVariable("seriesId") Integer id, @Valid @RequestBody EpisodeCommand command) {
         LOGGER.info("Http request, POST /api/series/" + id + "/episodes , body: " + command.toString());
         return episodesService.saveEpisode(id, command);
@@ -62,6 +64,7 @@ public class EpisodesController {
     @PutMapping("series/Allepisodes/{episodeId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Update an episode by id")
+    @ApiResponse(responseCode = "200", description = "Episode updated")
     public EpisodesInfo updateOrInsert(@PathVariable("episodeId") Integer id, @RequestBody EpisodeCommand command) {
         LOGGER.info("Http request, PUT /api/series/Allepisodes/" + id);
         return episodesService.updateOrInsert(id, command);
@@ -79,6 +82,7 @@ public class EpisodesController {
     @DeleteMapping("series/Allepisodes/{episodeId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Delete an episode by id")
+    @ApiResponse(responseCode = "200", description = "Episode deleted")
     public void delete(@PathVariable("episodeId") Integer id) {
         LOGGER.info("Http request, DELETE /api/series/Allepisodes/" + id);
         episodesService.deleteById(id);
@@ -96,6 +100,7 @@ public class EpisodesController {
     @DeleteMapping("/archive/deletedepisodes/{deletedEpisodeId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Delete an ARCHIVED episode by id")
+    @ApiResponse(responseCode = "200", description = "ARCHIVED Episode deleted")
     public void deleteArchivedEpisode(@PathVariable("deletedEpisodeId") Integer id) {
         LOGGER.info("Http request, DELETE /api/archive/deletedepisodes/" + id);
         episodesService.deleteArchivedEpisodeById(id);
@@ -104,6 +109,7 @@ public class EpisodesController {
     @DeleteMapping("/archive/deletedepisodes/PURGE")        //Easter Egg
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "DELETE all ARCHIVED episodes (not recommended)")
+    @ApiResponse(responseCode = "200", description = "ooops. no more episodes")
     public void purge() {
         LOGGER.info("Http request, DELETE /api/archive/deletedepisodes/PURGE... What have you done?!");
         episodesService.purge();

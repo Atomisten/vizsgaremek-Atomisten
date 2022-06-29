@@ -1,6 +1,7 @@
 package vizsgaremek.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ public class SeriesController {
     @PostMapping("series")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Save a Series")
+    @ApiResponse(responseCode = "201", description = "Series saved")
     public SeriesInfo save(@Valid @RequestBody SeriesCommand command) {
         LOGGER.info("Http request, POST /api/series, body: " + command.toString());
         return seriesService.saveSeries(command);
@@ -55,6 +57,7 @@ public class SeriesController {
     @PutMapping("series/{seriesId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Update a series by id")
+    @ApiResponse(responseCode = "200", description = "Series updated")
     public SeriesInfo updateOrInsert(@PathVariable("seriesId") Integer id, SeriesCommand seriesCommand) {
         LOGGER.info("Http request, PUT /api/series/" + id);
         return seriesService.updateOrInsertSeries(id, seriesCommand);
@@ -64,6 +67,7 @@ public class SeriesController {
     @DeleteMapping("series/{seriesId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Delete an series by id")
+    @ApiResponse(responseCode = "200", description = "Series deleted")
     public void deleteSeries(@PathVariable("seriesId") Integer id) {
         LOGGER.info("Http request, DELETE series/" + id);
         seriesService.deleteById(id);
@@ -82,6 +86,7 @@ public class SeriesController {
     @DeleteMapping("archive/deletedseries/{seriesId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Delete an ARCHIVED series by id and all the ARCHIVED episodes of it")
+    @ApiResponse(responseCode = "200", description = "ARCHIVED Series and all of its episodes deleted")
     public void deleteArchivedSeries(@PathVariable("seriesId") Integer id) {
         LOGGER.info("Http request, DELETE archive/deletedseries/" + id);
         seriesService.deleteArchivedSeries(id);
@@ -90,6 +95,7 @@ public class SeriesController {
     @DeleteMapping("archive/deletedseries/PURGE")
     @ResponseStatus(HttpStatus.OK)                               //Easter Egg
     @Operation(summary = "DELETE EVERYTHING ARCHIVED (not recommended)")
+    @ApiResponse(responseCode = "200", description = "nothing is archived anymore...")
     public void purge() {
         LOGGER.info("Http request, DELETE archive/deletedseries/PURGE... What have you done?!");
         seriesService.purgeAll();

@@ -1,6 +1,7 @@
 package vizsgaremek.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,7 @@ public class MoviesController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Save a Movie")
+    @ApiResponse(responseCode = "201", description = "Movie saved")
     public MoviesInfo save(@Valid @RequestBody MovieCommand command) {
         LOGGER.info("Http request, POST /api/movies, body: " + command.toString());
         return moviesService.saveMovie(command);
@@ -56,6 +58,7 @@ public class MoviesController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Update a movie by id")
+    @ApiResponse(responseCode = "200", description = "Movie updated")
     public MoviesInfo updateOrInsert(@PathVariable("id") Integer id, @RequestBody MovieCommand command) {
         LOGGER.info("Http request, PUT /api/movies/" + id);
         return moviesService.updateOrInsert(id, command);
@@ -64,6 +67,7 @@ public class MoviesController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Delete a movie by id")
+    @ApiResponse(responseCode = "200", description = "Movie deleted")
     public void delete(@PathVariable("id") Integer id) {
         LOGGER.info("Http request, DELETE /api/movies/" + id);
         moviesService.deleteById(id);
