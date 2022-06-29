@@ -1,5 +1,7 @@
 package vizsgaremek.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/")
+@Tag(name = "EPISODES controller")
 public class EpisodesController {
 
     private EpisodesService episodesService;
@@ -26,6 +29,7 @@ public class EpisodesController {
 
     @PostMapping("series/{seriesId}/episodes")
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Save an Episode")
     public EpisodesInfo save(@PathVariable("seriesId") Integer id, @Valid @RequestBody EpisodeCommand command) {
         LOGGER.info("Http request, POST /api/series/" + id + "/episodes , body: " + command.toString());
         return episodesService.saveEpisode(id, command);
@@ -33,6 +37,7 @@ public class EpisodesController {
 
     @GetMapping("series/Allepisodes")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "List all episodes")
     public List<EpisodesInfo> findAll() {
         LOGGER.info("Http request, GET api/series/Allepisodes");
         return episodesService.listAllEpisodes();
@@ -40,6 +45,7 @@ public class EpisodesController {
 
     @GetMapping("series/{seriesId}/episodes/")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "List all episodes for a SERIES by id")
     public List<EpisodesInfo> findAllEpisodesForSeries(@PathVariable("seriesId") Integer id) {
         LOGGER.info("Http request, GET /api/series/" + id + "/episodes");
         return episodesService.listAllEpisodesForSeries(id);
@@ -47,6 +53,7 @@ public class EpisodesController {
 
     @GetMapping("series/Allepisodes/{episodeId}")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Find an episode by id")
     public EpisodesInfo findById(@PathVariable("episodeId") Integer id) {
         LOGGER.info("Http request, GET /api/series/Allepisodes/" + id);
         return episodesService.findById(id);
@@ -54,6 +61,7 @@ public class EpisodesController {
 
     @PutMapping("series/Allepisodes/{episodeId}")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Update an episode by id")
     public EpisodesInfo updateOrInsert(@PathVariable("episodeId") Integer id, @RequestBody EpisodeCommand command) {
         LOGGER.info("Http request, PUT /api/series/Allepisodes/" + id);
         return episodesService.updateOrInsert(id, command);
@@ -70,6 +78,7 @@ public class EpisodesController {
 
     @DeleteMapping("series/Allepisodes/{episodeId}")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Delete an episode by id")
     public void delete(@PathVariable("episodeId") Integer id) {
         LOGGER.info("Http request, DELETE /api/series/Allepisodes/" + id);
         episodesService.deleteById(id);
@@ -78,6 +87,7 @@ public class EpisodesController {
 
     @GetMapping("/archive/Alldeletedepisodes")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "List all ARCHIVED episodes")
     public List<DeletedEpisodesInfo> archiveList() {
         LOGGER.info("Http request, GET /api/archive/Alldeletedepisodes");
         return episodesService.archiveList();
@@ -85,13 +95,15 @@ public class EpisodesController {
 
     @DeleteMapping("/archive/deletedepisodes/{deletedEpisodeId}")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Delete an ARCHIVED episode by id")
     public void deleteArchivedEpisode(@PathVariable("deletedEpisodeId") Integer id) {
         LOGGER.info("Http request, DELETE /api/archive/deletedepisodes/" + id);
         episodesService.deleteArchivedEpisodeById(id);
     }
 
-    @DeleteMapping("/archive/deletedepisodes/PURGE")
-    @ResponseStatus(HttpStatus.OK)                               //Easter Egg
+    @DeleteMapping("/archive/deletedepisodes/PURGE")        //Easter Egg
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "DELETE all ARCHIVED episodes (not recommended)")
     public void purge() {
         LOGGER.info("Http request, DELETE /api/archive/deletedepisodes/PURGE... What have you done?!");
         episodesService.purge();
